@@ -1,4 +1,6 @@
-Windows 10 C-OL - Custom Tweaks Collection Script
+Windows 10 C-OL
+
+Custom Tweaks Collection Script
 
 This is a collection of tweaks that aim to fine tune a fresh install of Windows 10 keeping the default behavior of visual inputs providing a drastically overall performance boost
 and enhanced security.
