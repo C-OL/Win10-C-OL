@@ -18,6 +18,8 @@ ECHO. && ECHO Press any key to exit && PAUSE > NUL && EXIT)
 ECHO. && ECHO :::::::: Windows 10 C-OL - Custom Tweak Collection Script :::::::: && ECHO.
 TASKKILL /F /IM explorer.exe >NUL 2>&1
 ::WMIC.exe /Namespace:\\root\default Path SystemRestore Call CreateRestorePoint "Windows 10 C-OL - Custom Tweaks Collection Script", 100, 7
+set OS=%PROCESSOR_ARCHITECTURE%
+if /i %PROCESSOR_ARCHITECTURE%==x86 (if not defined PROCESSOR_ARCHITEW6432 (set "OS=x86"))
 
 ECHO :::::::: *Lower UAC Level*
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /V "ConsentPromptBehaviorAdmin" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -30,10 +32,12 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\S
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /V "ValidateAdminCodeSignatures" /T REG_DWORD /D "0" /F >NUL 2>&1
 
 ECHO :::::::: Accounts
-:: Remove DefaultUser0 Account For Privacy
-net user defaultuser0 /delete >NUL 2>&1
+:: Remove DefaultUser0 Account
+NET USER DefaultUser0 /Delete >NUL 2>&1
+:: Password Expiration
+NET ACCOUNTS /MaxPwAge:Unlimited >NUL 2>&1
 :: Set User TEMP to Windows TEMP
-IF exist "%LOCALAPPDATA%\TEMP" RD /S /Q "%LOCALAPPDATA%\TEMP" >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\TEMP" RD /S /Q "%LOCALAPPDATA%\TEMP" >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\Environment" /V "TEMP" /T REG_SZ /D "%SYSTEMROOT%\TEMP" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\Environment" /V "TMP" /T REG_SZ /D "%SYSTEMROOT%\TEMP" /F >NUL 2>&1
 :: Microsoft.com accounts (Block Sign-in Microsoft account)
@@ -101,18 +105,19 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Exte
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Paint\Settings" /V "DisableModernPaintBootstrap" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Microsoft Edge and Internet Explorer
 :: New Edge Uninstall
-IF exist 'cmd.exe /c \"cd /D%PROGRAMFILES(X86)%\Microsoft\Edge\Application\8*\Installer\setup.exe\"' (cmd.exe /c "cd /D%PROGRAMFILES(X86)%\Microsoft\Edge\Application\8*\Installer && setup.exe --uninstall --force-uninstall --system-level" && RD /S /Q "%PROGRAMFILES(X86)%\Microsoft\Edge") >NUL 2>&1
-IF exist 'cmd.exe /c \"cd /D%PROGRAMFILES(X86)%\Microsoft\Edge\Application\9*\Installer\setup.exe\"' (cmd.exe /c "cd /D%PROGRAMFILES(X86)%\Microsoft\Edge\Application\9*\Installer && setup.exe --uninstall --force-uninstall --system-level" && RD /S /Q "%PROGRAMFILES(X86)%\Microsoft\Edge") >NUL 2>&1
-IF exist "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" (TAKEOWN /F "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" && ICACLS "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe") >NUL 2>&1
-IF exist "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" (TAKEOWN /F "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" && ICACLS "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe") >NUL 2>&1
-IF exist "%APPDATA%\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk" >NUL 2>&1
-IF exist "%LOCALAPPDATA%\Microsoft\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Edge" >NUL 2>&1
-IF exist "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" >NUL 2>&1
-IF exist "%PROGRAMDATA%\Microsoft\EdgeUpdate" RD /S /Q "%PROGRAMDATA%\Microsoft\EdgeUpdate" >NUL 2>&1
-IF exist "%USERPROFILE%\Desktop\Microsoft Edge.lnk" DEL /F /S /Q "%USERPROFILE%\Desktop\Microsoft Edge.lnk" >NUL 2>&1
+if %OS%==x86 (set "PF=%PROGRAMFILES%\Microsoft") else if %OS%==AMD64 (set "PF=%PROGRAMFILES(X86)%\Microsoft")
+FOR /D %%i IN ("%PF%\Microsoft\Edge\Application\*") DO IF EXIST "%%i\Installer\Setup.exe" (%%i\Installer\Setup.exe --uninstall --force-uninstall --system-level --verbose-logging --delete-profile) >NUL 2>&1
+IF EXIST "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" (TAKEOWN /F "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" && ICACLS "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe") >NUL 2>&1
+IF EXIST "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" (TAKEOWN /F "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" && ICACLS "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe") >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" (TAKEOWN /F "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" && ICACLS "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" /GRANT Administrators:F && RD /S /Q "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe") >NUL 2>&1
+IF EXIST "%APPDATA%\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk" >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\Microsoft\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Edge" >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" >NUL 2>&1
+IF EXIST "%PROGRAMDATA%\Microsoft\EdgeUpdate" RD /S /Q "%PROGRAMDATA%\Microsoft\EdgeUpdate" >NUL 2>&1
+IF EXIST "%USERPROFILE%\Desktop\Microsoft Edge.lnk" DEL /F /S /Q "%USERPROFILE%\Desktop\Microsoft Edge.lnk" >NUL 2>&1
 DEL /F /S /Q "%SYSTEMROOT%\System32\config\systemprofile\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge*.lnk" >NUL 2>&1
-:: RD /S /Q "%localappdata%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
-:: RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Edge" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
@@ -143,25 +148,25 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer" /V "Integrated
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Download" /V "CheckExeSignatures" /T REG_SZ /D "No" /F >NUL 2>&1
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Download" /V "RunInvalidSignatures" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Flash Player
-::IF exist "%APPDATA%\Adobe\Flash Player" (TAKEOWN /F "%APPDATA%\Adobe\Flash Player" && ICACLS "%APPDATA%\Adobe\Flash Player" /GRANT Administrators:F && RD /S /Q "%APPDATA%\Adobe\Flash Player") >NUL 2>&1
-::IF exist "%APPDATA%\Macromedia\Flash Player" (TAKEOWN /F "%APPDATA%\Macromedia\Flash Player" && ICACLS "%APPDATA%\Macromedia\Flash Player" /GRANT Administrators:F && RD /S /Q "%APPDATA%\Macromedia\Flash Player") >NUL 2>&1
-::IF exist "%SYSTEMROOT%\SysWOW64\Macromed\Flash" (TAKEOWN /F "%SYSTEMROOT%\SysWOW64\Macromed\Flash" && ICACLS "%SYSTEMROOT%\SysWOW64\Macromed\Flash" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\SysWOW64\Macromed\Flash") >NUL 2>&1
-::IF exist "%SYSTEMROOT%\System32\Macromed\Flash" (TAKEOWN /F "%SYSTEMROOT%\System32\Macromed\Flash" && ICACLS "%SYSTEMROOT%\System32\Macromed\Flash" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\System32\Macromed\Flash") >NUL 2>&1
+::IF EXIST "%APPDATA%\Adobe\Flash Player" (TAKEOWN /F "%APPDATA%\Adobe\Flash Player" && ICACLS "%APPDATA%\Adobe\Flash Player" /GRANT Administrators:F && RD /S /Q "%APPDATA%\Adobe\Flash Player") >NUL 2>&1
+::IF EXIST "%APPDATA%\Macromedia\Flash Player" (TAKEOWN /F "%APPDATA%\Macromedia\Flash Player" && ICACLS "%APPDATA%\Macromedia\Flash Player" /GRANT Administrators:F && RD /S /Q "%APPDATA%\Macromedia\Flash Player") >NUL 2>&1
+::IF EXIST "%SYSTEMROOT%\SysWOW64\Macromed\Flash" (TAKEOWN /F "%SYSTEMROOT%\SysWOW64\Macromed\Flash" && ICACLS "%SYSTEMROOT%\SysWOW64\Macromed\Flash" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\SysWOW64\Macromed\Flash") >NUL 2>&1
+::IF EXIST "%SYSTEMROOT%\System32\Macromed\Flash" (TAKEOWN /F "%SYSTEMROOT%\System32\Macromed\Flash" && ICACLS "%SYSTEMROOT%\System32\Macromed\Flash" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\System32\Macromed\Flash") >NUL 2>&1
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons" /V "FlashPlayerEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer" /V "DisableFlashInIE" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons" /V "FlashPlayerEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Microsoft OneDrive
 TASKLIST | FIND /I "OneDrive.exe" && TASKKILL /F /IM OneDrive.exe >NUL 2>&1
-IF exist %SYSTEMROOT%\SYSTEM32\OneDriveSetup.exe (TAKEOWN /F %SYSTEMROOT%\SYSTEM32\OneDrive* && ICACLS %SYSTEMROOT%\SYSTEM32\OneDrive* /GRANT Administrators:F && %SYSTEMROOT%\SYSTEM32\OneDriveSetup.exe /uninstall && DEL /F /S /Q %SYSTEMROOT%\SYSTEM32\OneDrive*) >NUL 2>&1
-IF exist %SYSTEMROOT%\SysWOW64\OneDriveSetup.exe (TAKEOWN /F %SYSTEMROOT%\SysWOW64\OneDrive* && ICACLS %SYSTEMROOT%\SysWOW64\OneDrive* /GRANT Administrators:F && %SYSTEMROOT%\SysWOW64\OneDriveSetup.exe /uninstall && DEL /F /S /Q %SYSTEMROOT%\SysWOW64\OneDrive*) >NUL 2>&1
-IF exist "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" >NUL 2>&1
-IF exist "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" >NUL 2>&1
-IF exist "%LOCALAPPDATA%\Microsoft\OneDrive" RD /S /Q "%LOCALAPPDATA%\Microsoft\OneDrive" >NUL 2>&1
-IF exist "%PROGRAMDATA%\Microsoft OneDrive" RD /S /Q "%PROGRAMDATA%\Microsoft OneDrive" >NUL 2>&1
-IF exist "%SYSTEMDRIVE%\OneDriveTemp" RD /S /Q "%SYSTEMDRIVE%\OneDriveTemp" >NUL 2>&1
-IF exist "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" DEL /F /S /Q "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" >NUL 2>&1
-IF exist "%USERPROFILE%\Links\OneDrive.lnk" DEL /F /S /Q "%USERPROFILE%\Links\OneDrive.lnk" >NUL 2>&1
-IF exist "%USERPROFILE%\OneDrive" RD /S /Q "%USERPROFILE%\OneDrive" >NUL 2>&1
+if %OS%==x86 (set "OD=%SYSTEMROOT%\SYSTEM32") else if %OS%==AMD64 (set "OD=%SYSTEMROOT%\SysWOW64")
+IF EXIST %OD%\OneDriveSetup.exe (TAKEOWN /F %OD%\OneDrive* && ICACLS %OD%\OneDrive* /GRANT Administrators:F && %OD%\OneDriveSetup.exe /uninstall && DEL /F /S /Q %OD%\OneDrive*) >NUL 2>&1
+IF EXIST "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" >NUL 2>&1
+IF EXIST "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\Microsoft\OneDrive" RD /S /Q "%LOCALAPPDATA%\Microsoft\OneDrive" >NUL 2>&1
+IF EXIST "%PROGRAMDATA%\Microsoft OneDrive" RD /S /Q "%PROGRAMDATA%\Microsoft OneDrive" >NUL 2>&1
+IF EXIST "%SYSTEMDRIVE%\OneDriveTemp" RD /S /Q "%SYSTEMDRIVE%\OneDriveTemp" >NUL 2>&1
+IF EXIST "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" DEL /F /S /Q "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" >NUL 2>&1
+IF EXIST "%USERPROFILE%\Links\OneDrive.lnk" DEL /F /S /Q "%USERPROFILE%\Links\OneDrive.lnk" >NUL 2>&1
+IF EXIST "%USERPROFILE%\OneDrive" RD /S /Q "%USERPROFILE%\OneDrive" >NUL 2>&1
 REG Delete "HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
 REG Delete "HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\Environment" /V "OneDrive" /F >NUL 2>&1
@@ -292,7 +297,7 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "Lon
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "NtfsAllowExtendedCharacter8dot3Rename" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "NtfsDisable8dot3NameCreation" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "NtfsDisableLastAccessUpdate" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "NtfsEnableTxfDeprecatedFunctionality" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "NtfsEnableTxfDeprecatedFunctionality" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "NtfsMemoryUsage" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "NtfsMftZoneReservation" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "Win31FileSystem" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -393,8 +398,16 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Safer\CodeIdentI
 :: CredSSP Encryption
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /V "AllowEncryptionOracle" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Dead Gateway Detection
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "EnableDeadGWDetect" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "EnableDeadGWDetect" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "DeadGWDetectDefault" /T REG_DWORD /D "0" /F >NUL 2>&1
+:: SYN Attack
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "SynAttackProtect" /T REG_DWORD /D "2" /F >NUL 2>&1
+:: PMTU Discovery
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "EnablePMTUDiscovery" /T REG_DWORD /D "0" /F >NUL 2>&1
+:: Generic DoS
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "KeepAliveTime" /T REG_DWORD /D "300000" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "KeepAliveInterval" /T REG_DWORD /D "1000" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "TCPMaxDataRetransmissions" /T REG_DWORD /D "3" /F >NUL 2>&1
 :: Detailed Data Usage
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\DusmSvc\Settings" /V "DisableSystemBucket" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: DNS
@@ -435,9 +448,6 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSet
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Public" /V "AutoSetup" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Network Connectivity Status Indicator
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkConnectivityStatusIndicator" /V "NoActiveProbe" /T REG_DWORD /D "1" /F >NUL 2>&1
-:: NTLM (breaks Remote Desktop and Samba)
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "RestrictReceivingNTLMTraffic" /T REG_DWORD /D "2" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "RestrictSendingNTLMTraffic" /T REG_DWORD /D "2" /F >NUL 2>&1
 :: Password Reveal
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CredUI" /V "DisablePasswordReveal" /T REG_DWORD /D "1" /f
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" /V "DisablePasswordReveal" /T REG_DWORD /D "1" /f
@@ -452,14 +462,16 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "DisableDom
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "EveryoneIncludesAnonymous" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "LimitBlankPasswordUse" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "LmCompatibilityLevel" /T REG_DWORD /D "5" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "LsaCfgFlags" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "LsaCfgFlags" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "NoLMHash" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "RestrictAnonymous" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "RestrictAnonymous" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "RestrictAnonymousSAM" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "RunAsPPL" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "SCENoApplyLegacyAuditPolicy" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "SecureBoot" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "AllowNullSessionFallback" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "RestrictReceivingNTLMTraffic" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "RestrictSendingNTLMTraffic" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" /V "UseLogonCredential" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /V "DisableBandwidthThrottling" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /V "EnableSecuritySignature" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -498,7 +510,7 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" 
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "MaxUserPort" /T REG_DWORD /D "65534" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "TcpTimedWaitDelay" /T REG_DWORD /D "30" /F >NUL 2>&1
 :: TCP Timestamps
-netsh Int TCP Set Global Timestamps=Disabled >NUL 2>&1
+NETSH Int TCP Set Global Timestamps=Disabled >NUL 2>&1
 :: Terminal Server Shadowing
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /V "Shadow" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -572,6 +584,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogo
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /V "AutoRestartShell" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /V "EnableFirstLogonAnimation" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /V "ParseAutoexec" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /V "PasswordExpiryWarning" /T REG_SZ /D "5" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /V "PowerdownAfterShutdown" /T REG_SZ /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /V "RestartApps" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI\BootAnimation" /V "DisableStartupSound" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -590,7 +603,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization"
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "DisableAcrylicBackgroundOnLogon" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Logon Screen On Resume
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /V "ScreenSaverIsSecure" /T REG_DWORD /D "1" /F >NUL 2>&1
-::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System\Power" /V "PromptPasswordOnResume" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System\Power" /V "PromptPasswordOnResume" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Welcome Screen
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoWelcomeScreen" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoWelcomeScreen" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -661,7 +674,8 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Assistance\Client\1.0" /
 :: F1 key - Help and Support
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\Win32" /ve /T REG_SZ /D "" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\Win64" /ve /T REG_SZ /D "" /F >NUL 2>&1
-TASKLIST | FIND /I "HelpPane.exe" && TASKKILL /F /IM HelpPane.exe && TAKEOWN /F %SYSTEMROOT%\HelpPane.exe && ICACLS %SYSTEMROOT%\HelpPane.exe /INHERITANCE:R /REMOVE:G Administrators
+TASKLIST | FIND /I "HelpPane.exe" && TASKKILL /F /IM HelpPane.exe >NUL 2>&1
+IF EXIST %SYSTEMROOT%\HelpPane.exe (TAKEOWN /F %SYSTEMROOT%\HelpPane.exe && ICACLS %SYSTEMROOT%\HelpPane.exe /INHERITANCE:R /REMOVE Administrators) >NUL 2>&1
 :: Telemetry
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /V "AllowTelemetry" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection" /V "AllowTelemetry" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1222,8 +1236,8 @@ REG Add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\
 :: Provide Locally Relevant Content
 REG Add "HKEY_CURRENT_USER\Control Panel\International\User Profile" /V "HttpAcceptLanguageOptOut" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Remove Icon and Thumbnail Cache
-::IF exist %LOCALAPPDATA%\IconCache.db (ATTRIB -H %LOCALAPPDATA%\IconCache.db && DEL /F /S /Q %LOCALAPPDATA%\IconCache.db && FSUTIL File CreateNew %LOCALAPPDATA%\IconCache.db 0) >NUL 2>&1
-::IF exist %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db (ATTRIB -H %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db && DEL /F /S /Q %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db) >NUL 2>&1
+::IF EXIST %LOCALAPPDATA%\IconCache.db (ATTRIB -H %LOCALAPPDATA%\IconCache.db && DEL /F /S /Q %LOCALAPPDATA%\IconCache.db && FSUTIL File CreateNew %LOCALAPPDATA%\IconCache.db 0) >NUL 2>&1
+::IF EXIST %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db (ATTRIB -H %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db && DEL /F /S /Q %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db) >NUL 2>&1
 :: Remove 'Shortcut' Text and Arrow
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "Link" /T REG_BINARY /D "00000000" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\NamingTemplates" /V "ShortcutNameTemplate" /T REG_SZ /D "%s.lnk" /F >NUL 2>&1
@@ -1358,7 +1372,7 @@ REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\SystemFileAssociations\.stl\Shel
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\SystemFileAssociations\.tIF\Shell\3D Edit" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\SystemFileAssociations\.tIFf\Shell\3D Edit" /F >NUL 2>&1
 :: Add to 'New' Menu
-IF exist "%APPDATA%\Microsoft\Windows\SendTo\Mail recipient.*" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\SendTo\Mail recipient.*" >NUL 2>&1
+IF EXIST "%APPDATA%\Microsoft\Windows\SendTo\Mail recipient.*" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\SendTo\Mail recipient.*" >NUL 2>&1
 REG Add "HKEY_CLASSES_ROOT\.cmd\ShellNew" /V "NullFile" /T REG_SZ /D "" /F >NUL 2>&1
 REG Add "HKEY_CLASSES_ROOT\Drive\shellex\-ContextMenuHandlers\{fbeb8a05-beee-4442-804e-409d6c4515e9}" /ve /T REG_SZ /D "" /F >NUL 2>&1
 REG Add "HKEY_CLASSES_ROOT\batfile\shellex\-ContextMenuHandlers\Compatibility" /ve /T REG_SZ /D "{1d27f844-3a1f-4410-85ac-14651078412d}" /F >NUL 2>&1
@@ -1495,7 +1509,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet"
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard" /V "EnableVirtualizationBasedSecurity" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /V "RequirePlatformSecurityFeatures" /T REG_DWORD /D "3"  /F >NUL 2>&1
-::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /V "LsaCfgFlags" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /V "LsaCfgFlags" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Network Protection
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection" /V "EnableNetworkProtection" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: SmartScreen
@@ -1517,7 +1531,8 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /V "NoGenTicket" /T REG_DWORD /D "1" /F >NUL 2>&1
 
 ECHO :::::::: Windows Search, Cortana, Indexing/Prefetch
-TASKLIST | FIND /I "SearchUI.exe" && TASKKILL /F /IM SearchUI.exe && RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy" /F >NUL 2>&1
+TASKLIST | FIND /I "SearchUI.exe" && TASKKILL /F /IM SearchUI.exe
+RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy" /F >NUL 2>&1
 REG Add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Cortana.exe" /V "Debugger" /t REG_SZ /d "%SYSTEMROOT%\System32\taskkill.exe" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" /V "EnableFindMyFiles" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "ShowCortanaButton" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1715,8 +1730,8 @@ SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WwanSvc\OobeDiscovery" >NUL 2>&
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\Xbgm" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\XblGameSaveTask" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\XblGameSaveTaskLogon" >NUL 2>&1
-netsh advfirewall firewall add rule name="Compatability Telemetry Runner" action="block" dir="in" interface="any" program="%SystemDrive%\windows\system32\CompatTelRunner.exe" Description="DisAllow CompatTelRunner to connect in from the Internet." enable=yes >NUL 2>&1
-netsh advfirewall firewall add rule name="Compatability Telemetry Runner" action="block" dir="out" interface="any" program="%SystemDrive%\windows\system32\CompatTelRunner.exe" Description="DisAllow CompatTelRunner to connect out to the Internet." enable=yes >NUL 2>&1
+NETSH AdvFirewall Firewall Add Rule Name="Compatability Telemetry Runner" Action="Block" Dir="In" Interface="Any" Program="%SYSTEMDRIVE%\Windows\System32\CompatTelRunner.exe" Description="Disallow CompatTelRunner to connect in from the Internet." Enable=Yes >NUL 2>&1
+NETSH AdvFirewall Firewall Add Rule Name="Compatability Telemetry Runner" Action="Block" Dir="Out" Interface="Any" Program="%SYSTEMDRIVE%\Windows\System32\CompatTelRunner.exe" Description="Disallow CompatTelRunner to connect out to the Internet." Enable=Yes >NUL 2>&1
 
 ECHO :::::::: Services
 ::for /D%%G in (CertPropSvc,CDPSvc,CDPUserSvc,CscService,DiagTrack,DoSvc,DevicesFlow,DevicesFlowUserSvc,DevQueryBroker,DsmSvc,DusmSvc,DPS,diagnosticshub.standardcollector.service,dmwappushservice,MapsBroker,MessagingService,OneSyncSvc,PimIndexMaintenanceSvc,PrintWorkflowUserSvc,PcaSvc,RemoteRegistry,SmsRouter,Spooler,TrkWks,StiSvc,SecurityHealthService,Sense,UnistoreSvc,UserDataSvc,WpnUserService,WerSvc,WMPNetworkSvc,WSearch,WdNisDrv,WdNisSvc,WinDefend) do (
