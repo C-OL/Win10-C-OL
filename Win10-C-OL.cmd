@@ -1,7 +1,7 @@
 :: Windows 10 C-OL - Custom Tweaks Collection Script
 ::
 :: This is a collection of tweaks that aim to fine tune a fresh install of Windows 10 keeping
-:: the default behavior of visual inputs providing a drastically overall performance boost and enhanced security.
+:: the Default behavior of visual inputs providing a drastically overall performance boost and enhanced security.
 ::
 :: Some tweaks are meant for the CURRENT_USER instead of using Group Policies to avoid similar annoying messages
 :: such as: "Some settings are managed by your organization".
@@ -12,12 +12,12 @@
 @ECHO OFF & COLOR 30
 SETLOCAL EnableDelayedExpansion
 PUSHD "%~dp0"
-CLS && openfiles >NUL 2>&1
-IF %ERRORLEVEL%==1 (ECHO. && ECHO :::::::: You are NOT running as Administrator :::::::: && ECHO Right-click and select ^'Run as Administrator^' and try again.
-ECHO. && ECHO Press any key to exit && PAUSE > NUL && EXIT)
-ECHO. && ECHO :::::::: Windows 10 C-OL - Custom Tweak Collection Script :::::::: && ECHO.
-TASKKILL /F /IM explorer.exe >NUL 2>&1
-::WMIC.exe /Namespace:\\root\default Path SystemRestore Call CreateRestorePoint "Windows 10 C-OL - Custom Tweaks Collection Script", 100, 7
+CLS & openfiles >NUL 2>&1
+IF %ERRORLEVEL%==1 (ECHO. & ECHO :::::::: You are NOT running as Administrator :::::::: & ECHO Right-click and select ^'Run as Administrator^' and try again.
+ECHO. & ECHO Press any key to exit & PAUSE > NUL & EXIT)
+ECHO. & ECHO :::::::: Windows 10 C-OL - Custom Tweak Collection Script :::::::: & ECHO.
+TASKKILL /F /IM EXPLORER.EXE >NUL 2>&1
+::WMIC.exe /Namespace:\\root\Default Path SystemRestore Call CreateRestorePoint "Windows 10 C-OL - Custom Tweaks Collection Script", 100, 7
 set OS=%PROCESSOR_ARCHITECTURE%
 if /i %PROCESSOR_ARCHITECTURE%==x86 (if not defined PROCESSOR_ARCHITEW6432 (set "OS=x86"))
 
@@ -115,12 +115,12 @@ IF EXIST "%LOCALAPPDATA%\Microsoft\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Edge
 IF EXIST "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" >NUL 2>&1
 IF EXIST "%PROGRAMDATA%\Microsoft\EdgeUpdate" RD /S /Q "%PROGRAMDATA%\Microsoft\EdgeUpdate" >NUL 2>&1
 IF EXIST "%USERPROFILE%\Desktop\Microsoft Edge.lnk" DEL /F /S /Q "%USERPROFILE%\Desktop\Microsoft Edge.lnk" >NUL 2>&1
-DEL /F /S /Q "%SYSTEMROOT%\System32\config\systemprofile\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge*.lnk" >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Edge" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate" /F >NUL 2>&1
+DEL /F /S /Q "%SYSTEMROOT%\System32\Config\SystemProfile\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge*.lnk" >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Edge" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\EdgeUpdate" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\EdgeUpdate" /V "DoNotUpdateToEdgeWithChromium" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MicrosoftEdge.exe" /V "Debugger" /T REG_SZ /D "%SYSTEMROOT%\System32\taskkill.exe" /F >NUL 2>&1
 REG Delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msedge.exe" /F >NUL 2>&1
@@ -128,9 +128,9 @@ REG Delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Executi
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad" /V "WpadOverride" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad" /V "WpadOverride" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap" /V "IEHarden" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap" /V "IEHarden" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}" /V "IsInstalled" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}" /V "IsInstalled" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap" /V "IEHarden" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4B3F-8CFC-4F3A74704073}" /V "IsInstalled" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4B3F-8CFC-4F3A74704073}" /V "IsInstalled" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "DisableEdgeDesktopShortcutCreation" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" /V "MaxConnectionsPer1_0Server" /T REG_DWORD /D "10" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" /V "MaxConnectionsPerServer" /T REG_DWORD /D "10" /F >NUL 2>&1
@@ -138,20 +138,20 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\I
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings" /V "EnableHTTP2" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings" /V "EnableSSL3Fallback" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings" /V "PreventIgnoreCertErrors" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432node\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}" /V "IsInstalled" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4B3F-8CFC-4F3A74704073}" /V "IsInstalled" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap" /V "IEHarden" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap" /V "IEHarden" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap" /V "IEHarden" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\SOFTWARE\Classes\Local Settings\SOFTWARE\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\SOFTWARE\Classes\Local Settings\SOFTWARE\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedgedevtoolsclient_8wekyb3d8bbwe" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer" /V "IntegratedBrowser" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: CheckExeSignatures
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Download" /V "CheckExeSignatures" /T REG_SZ /D "No" /F >NUL 2>&1
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Download" /V "RunInvalidSignatures" /T REG_DWORD /D "0" /F >NUL 2>&1
-:: Flash Player
-::IF EXIST "%APPDATA%\Adobe\Flash Player" (TAKEOWN /F "%APPDATA%\Adobe\Flash Player" && ICACLS "%APPDATA%\Adobe\Flash Player" /GRANT Administrators:F && RD /S /Q "%APPDATA%\Adobe\Flash Player") >NUL 2>&1
-::IF EXIST "%APPDATA%\Macromedia\Flash Player" (TAKEOWN /F "%APPDATA%\Macromedia\Flash Player" && ICACLS "%APPDATA%\Macromedia\Flash Player" /GRANT Administrators:F && RD /S /Q "%APPDATA%\Macromedia\Flash Player") >NUL 2>&1
-::IF EXIST "%SYSTEMROOT%\SysWOW64\Macromed\Flash" (TAKEOWN /F "%SYSTEMROOT%\SysWOW64\Macromed\Flash" && ICACLS "%SYSTEMROOT%\SysWOW64\Macromed\Flash" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\SysWOW64\Macromed\Flash") >NUL 2>&1
-::IF EXIST "%SYSTEMROOT%\System32\Macromed\Flash" (TAKEOWN /F "%SYSTEMROOT%\System32\Macromed\Flash" && ICACLS "%SYSTEMROOT%\System32\Macromed\Flash" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\System32\Macromed\Flash") >NUL 2>&1
+:: Flash Player (Not needed after KB4577586)
+::IF EXIST "%APPDATA%\Adobe\Flash Player" (TAKEOWN /F "%APPDATA%\Adobe\Flash Player" & ICACLS "%APPDATA%\Adobe\Flash Player" /GRANT Administrators:F & RD /S /Q "%APPDATA%\Adobe\Flash Player") >NUL 2>&1
+::IF EXIST "%APPDATA%\Macromedia\Flash Player" (TAKEOWN /F "%APPDATA%\Macromedia\Flash Player" & ICACLS "%APPDATA%\Macromedia\Flash Player" /GRANT Administrators:F & RD /S /Q "%APPDATA%\Macromedia\Flash Player") >NUL 2>&1
+::IF EXIST "%SYSTEMROOT%\SysWOW64\Macromed\Flash" (TAKEOWN /F "%SYSTEMROOT%\SysWOW64\Macromed\Flash" & ICACLS "%SYSTEMROOT%\SysWOW64\Macromed\Flash" /GRANT Administrators:F & RD /S /Q "%SYSTEMROOT%\SysWOW64\Macromed\Flash") >NUL 2>&1
+::IF EXIST "%SYSTEMROOT%\System32\Macromed\Flash" (TAKEOWN /F "%SYSTEMROOT%\System32\Macromed\Flash" & ICACLS "%SYSTEMROOT%\System32\Macromed\Flash" /GRANT Administrators:F & RD /S /Q "%SYSTEMROOT%\System32\Macromed\Flash") >NUL 2>&1
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons" /V "FlashPlayerEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer" /V "DisableFlashInIE" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons" /V "FlashPlayerEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -168,10 +168,10 @@ IF EXIST "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\On
 IF EXIST "%USERPROFILE%\Links\OneDrive.lnk" DEL /F /S /Q "%USERPROFILE%\Links\OneDrive.lnk" >NUL 2>&1
 IF EXIST "%USERPROFILE%\OneDrive" RD /S /Q "%USERPROFILE%\OneDrive" >NUL 2>&1
 REG Delete "HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
-REG Delete "HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\WoW6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\Environment" /V "OneDrive" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
-REG Delete "HKEY_CURRENT_USER\SOFTWARE\Classes\WOW6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
+REG Delete "HKEY_CURRENT_USER\SOFTWARE\Classes\WoW6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\OneDrive" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "OneDriveSetup" /F >NUL 2>&1
@@ -180,11 +180,11 @@ REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\SkyDrive" /F >NUL 2>&1
 ::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{A52BBA46-E9E1-435f-B3D9-28DAA648C0F6}" /F >NUL 2>&1
-::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{A52BBA46-E9E1-435f-B3D9-28DAA648C0F6}" /F >NUL 2>&1
+::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\FolderDescriptions\{A52BBA46-E9E1-435f-B3D9-28DAA648C0F6}" /F >NUL 2>&1
 REG Delete "HKEY_USERS\S-1-5-21-2840528155-2331882053-1912885801-1000\SOFTWARE\Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
-REG Delete "HKEY_USERS\S-1-5-21-2840528155-2331882053-1912885801-1000\SOFTWARE\Classes\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
+REG Delete "HKEY_USERS\S-1-5-21-2840528155-2331882053-1912885801-1000\SOFTWARE\Classes\WoW6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
 REG Delete "HKEY_USERS\S-1-5-21-2840528155-2331882053-1912885801-1000_Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
-REG Delete "HKEY_USERS\S-1-5-21-2840528155-2331882053-1912885801-1000_Classes\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
+REG Delete "HKEY_USERS\S-1-5-21-2840528155-2331882053-1912885801-1000_Classes\WoW6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive" /V "DisableFileSyncNGSC" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Storage\EnabledDenyGP" /V "DenyAllGPState" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive" /V "PreventNetworkTrafficPreUserSignIn" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -196,15 +196,15 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v3.0" /V "SchUseStr
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v3.0" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NU
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v2.0.50727" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v2.0.50727" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v3.0" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v3.0" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v2.0.50727" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v2.0.50727" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v3.0" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v3.0" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v4.0.30319" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v4.0.30319" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Use Latest CLR
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework" /V "OnlyUseLatestCLR" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\wow6432node\Microsoft\.NETFramework" /V "OnlyUseLatestCLR" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework" /V "OnlyUseLatestCLR" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Windows Installer in Safe Mode
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SafeBoot\Network\MSIServer" /ve /T REG_SZ /D "Service" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\MSIServer" /ve /T REG_SZ /D "Service" /F >NUL 2>&1
@@ -268,8 +268,8 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\cdrom" /V "Autorun
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\I/O System" /V "IoBlockLegacyFsFilters" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Camera Fix?
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Media Foundation\Platform" /V "EnableFrameServerMode" /T REG_SZ /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows Media Foundation\Platform" /V "EnableFrameServerMode" /T REG_SZ /D "0" /F >NUL 2>&1
-:: Camera On/Off OSD notIFications
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows Media Foundation\Platform" /V "EnableFrameServerMode" /T REG_SZ /D "0" /F >NUL 2>&1
+:: Camera On/Off OSD Notifications
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OEM\Device\Capture" /V "NoPhysicalCameraLED" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Enable Intel AHCI
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\iaStorAC" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -281,16 +281,17 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\iaStorV\StartOverr
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\storahci" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\storahci\StartOverride" /V "0" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Enable Legacy F8 Bootmenu
-START /B /WAIT BcdEdit.exe /Set {Current} bootmenupolicy legacy >NUL 2>&1
-:: Enforce Device driver signing
-::START /B /WAIT BcdEdit.exe /Set nointegritychecks OFF >NUL 2>&1
+BCDEDIT /Set {Current} BootMenuPolicy Legacy >NUL 2>&1
+:: Enforce Device Driver Signing (Default)
+::BCDEDIT /Set NoIntegrityChecks OFF >NUL 2>&1
+::BCDEDIT /Set TestSigning OFF >NUL 2>&1
 :: Hardware Accelerated GPU Scheduling
 ::REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /V "HwSchMode" /T REG_DWORD /D "2" /F >NUL 2>&1
 :: Windows Data Execution Prevention (DEP)
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "NoDataExecutionPrevention" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "NoHeapTerminationOnCorruption" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "DisableHHDEP" /T REG_DWORD /D "0" /F >NUL 2>&1
-START /B /WAIT BcdEdit.exe /Set {Current} nx OptOut >NUL 2>&1
+START /B /WAIT BCDEDIT /Set {Current} nx OptOut >NUL 2>&1
 :: NTFS File System
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "ContigFileAllocSize" /T REG_DWORD /D "200" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "LongPathsEnabled" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -304,16 +305,13 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "Win
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "Win95TruncatedExtensions" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Split Threshold for Svchost (for 16GB RAM)
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control" /V "SvcHostSplitThresholdInKB" /T REG_DWORD /D "17662460" /F >NUL 2>&1
-:: Time Zone - Eastern
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /V "DynamicDaylightTimeDisabled" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /V "TimeZoneKeyName" /T REG_SZ /D "Eastern Standard Time" /F >NUL 2>&1
 
 ECHO :::::::: Ease of Access
 :::: Narrator
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Narrator" /V "CoupleNarratorCursorKeyboard" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Narrator" /V "ECHOChars" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Narrator" /V "ECHOWords" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Narrator" /V "ErrorNotIFicationType" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Narrator" /V "ErrorNotificationType" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Narrator" /V "FollowInsertion" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Narrator" /V "IntonationPause" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Narrator" /V "NarratorCursorHighlight" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -367,17 +365,15 @@ ECHO :::::::: Network ^& Internet
 :: Active Probing (pings to MSFT NCSI server)
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NlaSvc\Parameters\Internet" /V "EnableActiveProbing" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Admin Shares
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /V "AutoShareServer" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /V "AutoShareWks" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "AutoShareServer" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "AutoShareWks" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "RestrictNullSessAccess" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /V "Size" /T REG_DWORD /D "3" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /V "SMB1" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /V "SMB2" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /V "IRPStackSize" /T REG_DWORD /D "20" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "Size" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "SMB1" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "SMB2" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "IRPStackSize" /T REG_DWORD /D "20" /F >NUL 2>&1
 :: Adobe Type Manager
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" /V "DisableATMFD" /T REG_DWORD /D "1" /F >NUL 2>&1
-:: Audit Process Creation
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit" /V "ProcessCreationIncludeCmdLine_Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: BITS
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\BITS" /V "EnablePeercaching" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\BITS" /V "DisableBranchCache" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -388,7 +384,7 @@ REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\At
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments" /V "SaveZoneInformation" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Associations\ModRiskFileTypes" /ve /T REG_SZ /D ".bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Associations\ModRiskFileTypes" /ve /T REG_SZ /D ".bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Associations\ModRiskFileTypes" /ve /T REG_SZ /D ".bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Associations\ModRiskFileTypes" /ve /T REG_SZ /D ".bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd" /F >NUL 2>&1
 :: BranchCache
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\HostedCache\Discovery" /V "SCPDiscoveryEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\CooperativeCaching" /V "Enable" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -397,21 +393,10 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\Service" /V "En
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Safer\CodeIdentIFiers" /V "AuthenticodeEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: CredSSP Encryption
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /V "AllowEncryptionOracle" /T REG_DWORD /D "0" /F >NUL 2>&1
-:: Dead Gateway Detection
-::REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "EnableDeadGWDetect" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "DeadGWDetectDefault" /T REG_DWORD /D "0" /F >NUL 2>&1
-:: SYN Attack
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "SynAttackProtect" /T REG_DWORD /D "2" /F >NUL 2>&1
-:: PMTU Discovery
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "EnablePMTUDiscovery" /T REG_DWORD /D "0" /F >NUL 2>&1
-:: Generic DoS
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "KeepAliveTime" /T REG_DWORD /D "300000" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "KeepAliveInterval" /T REG_DWORD /D "1000" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "TCPMaxDataRetransmissions" /T REG_DWORD /D "3" /F >NUL 2>&1
 :: Detailed Data Usage
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\DusmSvc\Settings" /V "DisableSystemBucket" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: DNS
-::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" /V "DisableSmartProtocolReordering" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" /V "DisableSmartProtocolReordering" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" /V "DisableSmartNameResolution" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" /V "EnableMulticast" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" /V "RegistrationEnabled" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -456,10 +441,11 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkConnectiv
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI" /V "EnableSecureCredentialPrompting" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Restrict Anonymous Enumeration Shares
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation" /V "AllowProtectedCreds" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation" /V "AllowInsecureGuestAuth" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LanManWorkstation" /V "AllowInsecureGuestAuth" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control" /V "DisableRemoteScmEndpoints" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "DisableDomainCreds" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "EveryoneIncludesAnonymous" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "ForceGuest" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "LimitBlankPasswordUse" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "LmCompatibilityLevel" /T REG_DWORD /D "5" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "LsaCfgFlags" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -469,22 +455,22 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "RestrictAn
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "RunAsPPL" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "SCENoApplyLegacyAuditPolicy" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "SecureBoot" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "SubmitControl" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "AllowNullSessionFallback" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "RestrictReceivingNTLMTraffic" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "RestrictSendingNTLMTraffic" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" /V "UseLogonCredential" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /V "DisableBandwidthThrottling" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /V "EnableSecuritySignature" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /V "RequireSecuritySignature" /T REG_DWORD /D "256" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManWorkstation\Parameters" /V "DisableBandwidthThrottling" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManWorkstation\Parameters" /V "EnableSecuritySignature" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManWorkstation\Parameters" /V "RequireSecuritySignature" /T REG_DWORD /D "256" /F >NUL 2>&1
 :: RPC Unauthenticated Connections
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\RPC" /V "RestrictRemoteClients" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Router Discovery
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "PerformRouterDiscovery" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\QoS" /V "Do not use NLA" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /V "DnsPriority" /T REG_DWORD /D "6" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /V "HostsPriority" /T REG_DWORD /D "5" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /V "LocalPriority" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider" /V "NetbtPriority" /T REG_DWORD /D "7" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\QoS" /V "Do not use NLA" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "DnsPriority" /T REG_DWORD /D "6" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "HostsPriority" /T REG_DWORD /D "5" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "LocalPriority" /T REG_DWORD /D "4" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "NetbtPriority" /T REG_DWORD /D "7" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /V "NetworkThrottlingIndex" /T REG_DWORD /D "70" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /V "SystemResponsiveness" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Limit Reservable Bandwidth 
@@ -499,16 +485,93 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\E
 :: svchost.exe Security Mitigation
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig" /V "EnableSvchostMitigationPolicy" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: TCP/IP
-::REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "IGMPLevel" /T REG_DWORD /D "2" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters" /V "DisableIPSourceRouting" /T REG_DWORD /D "2" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "DefaultTTL" /T REG_DWORD /D "64" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "DisableIPSourceRouting" /T REG_DWORD /D "2" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "DisableTaskOffload" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "EnableICMPRedirect" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "EnableRSS" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "EnableWsd" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "MaxUserPort" /T REG_DWORD /D "65534" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /V "TcpTimedWaitDelay" /T REG_DWORD /D "30" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\AFD\Parameters" /V "EnableDynamicBacklog" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "BSDUrgent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "DeadGWDetect" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "DeadGWDetectDefault" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "DefaultRcvWindow" /T REG_DWORD /D "2000" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "DefaultTOS" /T REG_DWORD /D "12" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "DefaultTTL" /T REG_DWORD /D "64" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "DisableIPSourceRouting" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "DisableTaskOffload" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "DontAddDefaultGatewayDefault" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "EnableAddrMaskReply" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "EnableDeadGWDetect" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "EnableDynamicBacklog" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "EnableICMPRedirect" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "EnableMultiCastForwarding" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "EnablePMTUBHDetect" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "EnablePMTUDiscovery" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "EnableRSS" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "EnableSecurityFilters" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "EnableWsd" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "ForwardBroadcasts" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "GlobalMaxTCPWindowSize" /T REG_DWORD /D "ffff" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "IGMPLevel" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "IPEnableRouter" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "KeepAliveInterval" /T REG_DWORD /D "1000" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "KeepAliveTime" /T REG_DWORD /D "300000" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "MaxUserPort" /T REG_DWORD /D "65534" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "PerformRouterDiscovery" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "PMTUBlackHoleDetect" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "QualifyingDestinationThreshold" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "SackOpts" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "SynAttackProtect" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "TCP1323Opts" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "TCPMaxConnectResponseRetransmissions" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "TCPMaxDataRetransmissions" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "TCPMaxDupAcks" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "TCPMaxHalOpen" /T REG_DWORD /D "64" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "TCPMaxHalOpenRetired" /T REG_DWORD /D "50" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "TCPMaxPortsExhausted" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "TCPTimedWaitDelay" /T REG_DWORD /D "30" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "TCPUseRFC1122UrgentPointer" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "TCPWindowSize" /T REG_DWORD /D "2238" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "UseDomainNameDevolution" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "UseZeroBroadCast" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "BSDUrgent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "DeadGWDetect" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "DeadGWDetectDefault" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "DefaultRcvWindow" /T REG_DWORD /D "2000" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "DefaultTOS" /T REG_DWORD /D "12" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "DefaultTTL" /T REG_DWORD /D "64" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "DisableIPSourceRouting" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "DisableTaskOffload" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "DontAddDefaultGatewayDefault" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "EnableAddrMaskReply" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "EnableDeadGWDetect" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "EnableDynamicBacklog" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "EnableICMPRedirect" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "EnableMultiCastForwarding" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "EnablePMTUBHDetect" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "EnablePMTUDiscovery" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "EnableRSS" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "EnableSecurityFilters" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "EnableWsd" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "ForwardBroadcasts" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "GlobalMaxTCPWindowSize" /T REG_DWORD /D "ffff" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "IGMPLevel" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "IPEnableRouter" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "KeepAliveInterval" /T REG_DWORD /D "1000" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "KeepAliveTime" /T REG_DWORD /D "300000" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "MaxUserPort" /T REG_DWORD /D "65534" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "PerformRouterDiscovery" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "PMTUBlackHoleDetect" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "QualifyingDestinationThreshold" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "SackOpts" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "SynAttackProtect" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "TCP1323Opts" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "TCPMaxConnectResponseRetransmissions" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "TCPMaxDataRetransmissions" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "TCPMaxDupAcks" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "TCPMaxHalOpen" /T REG_DWORD /D "64" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "TCPMaxHalOpenRetired" /T REG_DWORD /D "50" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "TCPMaxPortsExhausted" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "TCPTimedWaitDelay" /T REG_DWORD /D "30" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "TCPUseRFC1122UrgentPointer" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "TCPWindowSize" /T REG_DWORD /D "2238" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "UseDomainNameDevolution" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "UseZeroBroadCast" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: TCP Timestamps
 NETSH Int TCP Set Global Timestamps=Disabled >NUL 2>&1
 :: Terminal Server Shadowing
@@ -520,21 +583,21 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RasMan\Parameters"
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RasMan\Parameters" /V "NegotiateDH2048_AES256" /T REG_DWORD /D "2" /F >NUL 2>&1
 :: WaitNetworkStartup
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon\SyncForegroundPolicy" /F >NUL 2>&1
-:: WIFi Sense and Hot Spot
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\WIFi\AllowAutoConnectToWIFiSenseHotspots" /V "value" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\WIFi\AllowWIFiHotSpotReporting" /V "value" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager" /V "WIFiSenseCredShared" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager" /V "WIFiSenseOpen" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager\config" /V "AutoConnectAllowedOEM" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager\config" /V "DefaultAutoConnectSharedState" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager\config" /V "WIFiSenseAllowed" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager\config" /V "WIFiSharingFacebookInitial" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager\config" /V "WIFiSharingOutlookInitial" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager\config" /V "WIFiSharingSkypeInitial" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager\crowdsrcplugin" /V "EnableWIFiCrowdsourcing" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager\features\S-1-5-21-3752830748-2673197281-2103194476-1000\SocialNetworks\ABCH" /V "OptInStatus" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager\features\S-1-5-21-3752830748-2673197281-2103194476-1000\SocialNetworks\ABCH-SKYPE" /V "OptInStatus" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\wIFinetworkmanager\features\S-1-5-21-3752830748-2673197281-2103194476-1000\SocialNetworks\FACEBOOK" /V "OptInStatus" /T REG_DWORD /D "0" /F >NUL 2>&1
+:: WiFi Sense and Hot Spot
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\WiFi\AllowAutoConnectToWiFiSenseHotspots" /V "value" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\WiFi\AllowWiFiHotSpotReporting" /V "value" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager" /V "WiFiSenseCredShared" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager" /V "WiFiSenseOpen" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Config" /V "AutoConnectAllowedOEM" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Config" /V "DefaultAutoConnectSharedState" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Config" /V "WiFiSenseAllowed" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Config" /V "WiFiSharingFacebookInitial" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Config" /V "WiFiSharingOutlookInitial" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Config" /V "WiFiSharingSkypeInitial" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\crowdsrcplugin" /V "EnableWiFiCrowdsourcing" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Features\S-1-5-21-3752830748-2673197281-2103194476-1000\SocialNetworks\ABCH" /V "OptInStatus" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Features\S-1-5-21-3752830748-2673197281-2103194476-1000\SocialNetworks\ABCH-SKYPE" /V "OptInStatus" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Features\S-1-5-21-3752830748-2673197281-2103194476-1000\SocialNetworks\FACEBOOK" /V "OptInStatus" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy" /V "fMinimizeConnections" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Windows Connect Now
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars" /V "DisableFlashConfigRegistrar" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -557,7 +620,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AutoRotati
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /V "AppsUseLightTheme" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /V "SystemUsesLightTheme" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Transparency
-::REG Add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /V "EnableTransparency" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG Add "HKEY_USERS\.Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /V "EnableTransparency" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /V "ColorPrevalence" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /V "EnableTransparency" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: DWM
@@ -602,8 +665,8 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization"
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization" /V "NoLockScreenSlideshow" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "DisableAcrylicBackgroundOnLogon" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Logon Screen On Resume
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /V "ScreenSaverIsSecure" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System\Power" /V "PromptPasswordOnResume" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /V "ScreenSaverIsSecure" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System\Power" /V "PromptPasswordOnResume" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Welcome Screen
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoWelcomeScreen" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoWelcomeScreen" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -630,7 +693,7 @@ REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Advertising
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Current\Device\Bluetooth" /V "AllowAdvertising" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Current\Device\Browser" /V "AllowAddressBarDropdown" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Let Websites Provide Locally Relevant Content By Accessing My Language List
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\International\User Profile" /V "HttpAcceptLanguageOptOut" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\International\User Profile" /V "HttpAcceptLanguageOptOut" /T REG_DWORD /D "1" /F >NUL 2>&1
 :::: Speech
 :::: Inking ^& Typing Personalization
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\TextInput" /V "AllowLinguisticDataCollection" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -656,10 +719,10 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TabletPC" /V "Pr
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\ScheduledDiagnostics" /V "EnabledExecution" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EventLog\ProtectedEventLogging" /V "EnableProtectedEventLogging" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy" /V "DisableQueryRemoteServer" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{C295FBBA-FD47-46ac-8BEE-B1715EC634E5}" /V "DownloadToolsEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{C295FBBA-FD47-46ac-8BEE-B1715EC634E5}" /V "ScenarioExecutionEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{eb73b633-3f4e-4ba0-8f60-8f3c6f53168f}" /V "EnabledScenarioExecutionLevel" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{eb73b633-3f4e-4ba0-8f60-8f3c6f53168f}" /V "ScenarioExecutionEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{C295FBBA-FD47-46AC-8BEE-B1715EC634E5}" /V "DownloadToolsEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{C295FBBA-FD47-46AC-8BEE-B1715EC634E5}" /V "ScenarioExecutionEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{EB73B633-3F4E-4BA0-8F60-8F3C6F53168F}" /V "EnabledScenarioExecutionLevel" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{EB73B633-3F4E-4BA0-8F60-8F3C6F53168F}" /V "ScenarioExecutionEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Microsoft Help and Feedback
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Siuf\Rules" /V "PeriodInNanoSeconds" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Siuf\Rules" /V "NumberOfSIUFInPeriod" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -678,19 +741,19 @@ TASKLIST | FIND /I "HelpPane.exe" && TASKKILL /F /IM HelpPane.exe >NUL 2>&1
 IF EXIST %SYSTEMROOT%\HelpPane.exe (TAKEOWN /F %SYSTEMROOT%\HelpPane.exe && ICACLS %SYSTEMROOT%\HelpPane.exe /INHERITANCE:R /REMOVE Administrators) >NUL 2>&1
 :: Telemetry
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /V "AllowTelemetry" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection" /V "AllowTelemetry" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack"  /V "DiagTrackAuthorization" /T REG_DWORD /D "7" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection" /V "AllowTelemetry" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack"  /V "DiagTrackAuthorization" /T REG_DWORD /D "7" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /V "DisableDiagnosticDataViewer" /T REG_DWORD /D "1" /F >NUL 2>&1
-::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /V "DoNotShowFeedbackNotIFications" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /V "DoNotShowFeedbackNotifications" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Diagnostics\DiagTrack" /V "ShowedToastAtLevel" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /V "AllowCommercialDataPipeline" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /V "AllowDeviceNameInDiagnosticData" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /V "ConfigureMicrosoft365UploadEndpointValue" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /V "LimitEnhancedDiagnosticDataWindowsAnalytics" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: .NET Core CLI telemetry
-START /B /WAIT SetX DOTNET_CLI_TELEMETRY_OPTOUT 1 >NUL 2>&1
+SETX DOTNET_CLI_TELEMETRY_OPTOUT 1 >NUL 2>&1
 :: PowerShell 7^+ telemetry
-START /B /WAIT SetX POWERSHELL_TELEMETRY_OPTOUT 1 >NUL 2>&1
+SETX POWERSHELL_TELEMETRY_OPTOUT 1 >NUL 2>&1
 :: Windows Messaging and Customer Experience Improvement Program (CEIP)
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Messenger\Client" /V "CEIP" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Messenger\Client" /V "PreventRun" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -707,7 +770,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Messenger\Client" /V "Pr
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Messenger\Client" /V "PreventRun" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\SQMClient\Windows" /V "CEIPEnable" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Windows Performance PerfTrack Log
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{9c5a40da-b965-4fc3-8781-88dd50a6299d}" /V "ScenarioExecutionEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{9C5A40DA-B965-4FC3-8781-88DD50A6299D}" /V "ScenarioExecutionEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Tailored Experiences
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy" /V "TailoredExperiencesWithDiagnosticDataEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy" /V "TailoredExperiencesWithDiagnosticDataEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -745,31 +808,31 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Capability
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\usb" /V "Value" /T reg_SZ /D "Allow" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation" /V "Value" /T reg_SZ /D "Deny" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userDataTasks" /V "Value" /T reg_SZ /D "Allow" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userNotIFicationListener" /V "Value" /T reg_SZ /D "Allow" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userNotificationListener" /V "Value" /T reg_SZ /D "Allow" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\videosLibrary" /V "Value" /T reg_SZ /D "Allow" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam" /V "Value" /T reg_SZ /D "Allow" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\wIFiData" /V "Value" /T reg_SZ /D "Allow" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\wIFiDirect" /V "Value" /T reg_SZ /D "Allow" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\WiFiData" /V "Value" /T reg_SZ /D "Allow" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\WiFiDirect" /V "Value" /T reg_SZ /D "Allow" /F >NUL 2>&1
 
 ECHO :::::::: System
-:::: NotIFications ^& Actions
-::REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotIFications" /V "NoToastApplicationNotIFication" /T REG_DWORD /D "1" /F >NUL 2>&1
-::REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotIFications" /V "NoToastApplicationNotIFicationOnLockScreen" /T REG_DWORD /D "1" /F >NUL 2>&1
-::REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\System" /V "DisableLockScreenAppNotIFications" /T REG_DWORD /D "1" /F >NUL 2>&1
+:::: Notifications ^& Actions
+::REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" /V "NoToastApplicationNotification" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" /V "NoToastApplicationNotificationOnLockScreen" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\System" /V "DisableLockScreenAppNotifications" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell" /V "UseActionCenterExperience" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" /V "NoTileApplicationNotification" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ActionCenter\Quick Actions\All\SystemSettings_Launcher_QuickNote" /V "Type" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Explorer" /V "DisableNotIFicationCenter" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\NotIFications\Settings" /V "NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\NotIFications\Settings" /V "NOC_GLOBAL_SETTING_ALLOW_NOTIFICATION_SOUND" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\NotIFications\Settings" /V "NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\NotIFications\Settings" /V "NOC_GLOBAL_SETTING_TOASTS_ENABLED" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotIFications" /V "AudioEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotIFications" /V "LockScreenToastEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotIFications" /V "NoCloudApplicationNotIFication" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotIFications" /V "NoTileApplicationNotIFication" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotIFications" /V "NoToastApplicationNotIFication" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotIFications" /V "ToastEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Explorer" /V "DisableNotificationCenter" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" /V "NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" /V "NOC_GLOBAL_SETTING_ALLOW_Notification_SOUND" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" /V "NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" /V "NOC_GLOBAL_SETTING_TOASTS_ENABLED" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" /V "AudioEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" /V "LockScreenToastEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" /V "NoCloudApplicationNotification" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" /V "NoTileApplicationNotification" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" /V "NoToastApplicationNotification" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\PushNotifications" /V "ToastEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :::: Power ^& Sleep
 :: Get Rid of Fast StartUp, Hibernation and Sleep functions (4 minutes monitor off)
 POWERCFG /H OFF >NUL 2>&1
@@ -802,7 +865,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EnhancedStorageD
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" /V "MiscPolicyInfo" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" /V "PassedPolicy" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" /V "ShippedWithReserves" /T REG_DWORD /D "0" /F >NUL 2>&1
-START /B /WAIT DISM /Online /Set-ReservedStorageState /State:Disabled >NUL 2>&1
+DISM /Online /Set-ReservedStorageState /State:Disabled >NUL 2>&1
 :::: Tablet
 :: Multitasking (Snap windows - refer to explorer customizations)
 :: Activity Feed / Timeline
@@ -851,7 +914,7 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /V
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /V "StartRCM" /T reg_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /V "TSUserEnabled" /T reg_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /V "fDenyTSConnections" /T reg_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /V "UserAuthentication" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-TCP" /V "UserAuthentication" /T REG_DWORD /D "1" /F >NUL 2>&1
 :::: Remote Assistance
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance" /V "AllowRemoteRPC" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance" /V "CreateEncryptedOnlyTickets" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -913,10 +976,10 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\TPMP
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\UBPM" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\WdiContextLog" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\WFP-IPsec Trace" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\WIFiDriverIHVSession" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\WIFiDriverIHVSessionRepro" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\WIFiDriverSession" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\WIFiSession" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\WiFiDriverIHVSession" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\WiFiDriverIHVSessionRepro" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\WiFiDriverSession" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\WiFiSession" /V "Start" /T REG_DWORD /D "0" /F >NUL 2>&1
 :::: Crash Control
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl" /V "AlwaysKeepMemoryDump" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl" /V "AutoReboot" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -945,9 +1008,9 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager" /V
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager" /V "SafeDLLSearchMode" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "ClearPageFileAtShutdown" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "DisablePagingExecutive" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "FeatureSettings" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "FeatureSettingsOverride" /T REG_DWORD /D "72" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "FeatureSettingsOverrideMask" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "Featuresettings" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "FeaturesettingsOverride" /T REG_DWORD /D "72" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "FeaturesettingsOverrideMask" /T REG_DWORD /D "3" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "LargeSystemCache" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "SwapfileControl" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /V "DisableExceptionChainValidation" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1033,11 +1096,11 @@ REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeli
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SystemPaneSuggestionsEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\310093" /V "AllowPartialContentAvailability" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SilentInstalledAppsEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SilentInstalledAppsEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SilentInstalledAppsEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\SuggestedApps" /F >NUL 2>&1
 :: Automatic Refresh (F5)
 REG Add "HKEY_CLASSES_ROOT\CLSID\{BDEADE7F-C265-11D0-BCED-00A0C90AB50F}\Instance" /V "DontRefresh" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\Wow6432Node\CLSID\{BDEADE7F-C265-11D0-BCED-00A0C90AB50F}\Instance" /V "DontRefresh" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\WoW6432Node\CLSID\{BDEADE7F-C265-11D0-BCED-00A0C90AB50F}\Instance" /V "DontRefresh" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\EXPLORER.EXE" /V "DontUseDesktopChangeRouter" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoRemoteChangeNotIFy" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoRemoteRecursiveEvents" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1051,7 +1114,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\A
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "ConfirmFileDelete" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "ConfirmFileDelete" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Default Drag n Drop
-:: 0 or delete = default action / 1 = Always copy / 2 = Always move / 4 = Always create shortcut
+:: 0 or delete = Default action / 1 = Always copy / 2 = Always move / 4 = Always create shortcut
 ::REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects" /V "DefaultDropEffect" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Desktop Gadgets
 REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell" /V "DisableCharmsHint" /F >NUL 2>&1
@@ -1064,49 +1127,60 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\W
 :: Desktop Icons
 :: My Computer on Desktop
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Recycled Bin on Desktop
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{645FF040-5081-101B-9F08-00AA002F954E}" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{645FF040-5081-101B-9F08-00AA002F954E}" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Network on Desktop
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{208d2c60-3aea-1069-a2d7-08002b30309d}" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{208D2C60-3AEA-1069-A2D7-08002B30309D}" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{208D2C60-3AEA-1069-A2D7-08002B30309D}" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Control Panel
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "﻿{5399E694-6CE5-4D6C-8FCE-1D8870FDCBA0}" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "﻿{5399E694-6CE5-4D6C-8FCE-1D8870FDCBA0}" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: User's Files
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{59031a47-3f72-44a7-89c5-5595fe6b30ee}" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /F >NUL 2>&1
 :: Quick Access Show Frequent Folders and Recent Files
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HomeFolderDesktop\NameSpace\DelegateFolders\{3134ef9c-6b18-4996-ad04-ed5912e00eb5}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HomeFolderDesktop\NameSpace\DelegateFolders\{3134EF9C-6B18-4996-AD04-ED5912E00EB5}" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HomeFolderDesktop\NameSpace\DelegateFolders\{3936E9E4-D92C-4EEE-A85A-BC16D5EA0819}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\HomeFolderDesktop\NameSpace\DelegateFolders\{3134EF9C-6B18-4996-AD04-ED5912E00EB5}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\HomeFolderDesktop\NameSpace\DelegateFolders\{3936E9E4-D92C-4EEE-A85A-BC16D5EA0819}" /F >NUL 2>&1
 :: Remove 3D Objects
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}" /F >NUL 2>&1
 :: Remove Desktop
 ::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}" /F >NUL 2>&1
-::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}" /F >NUL 2>&1
+::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}" /F >NUL 2>&1
 :: Remove Documents
 ::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{A8CDFF1C-4878-43be-B5FD-F8091C1C60D0}" /F >NUL 2>&1
 ::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{D3162B92-9365-467A-956B-92703ACA08AF}" /F >NUL 2>&1
-::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{A8CDFF1C-4878-43be-B5FD-F8091C1C60D0}" /F >NUL 2>&1
-::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{D3162B92-9365-467A-956B-92703ACA08AF}" /F >NUL 2>&1
+::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{A8CDFF1C-4878-43BE-B5FD-F8091C1C60D0}" /F >NUL 2>&1
+::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{D3162B92-9365-467A-956B-92703ACA08AF}" /F >NUL 2>&1
 :: Remove Downloads
 ::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{088E3905-0323-4B02-9826-5D99428E115F}" /F >NUL 2>&1
 ::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{374DE290-123F-4565-9164-39C4925E467B}" /F >NUL 2>&1
-::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{088E3905-0323-4B02-9826-5D99428E115F}" /F >NUL 2>&1
-::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{374DE290-123F-4565-9164-39C4925E467B}" /F >NUL 2>&1
+::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{088E3905-0323-4B02-9826-5D99428E115F}" /F >NUL 2>&1
+::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{374DE290-123F-4565-9164-39C4925E467B}" /F >NUL 2>&1
 :: Remove Music
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{1CF1260C-4DD0-4ebb-811F-33C572699FDE}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{1CF1260C-4DD0-4ebb-811F-33C572699FDE}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{1CF1260C-4DD0-4EBB-811F-33C572699FDE}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3DFDF296-DBEC-4FB4-81D1-6A3438BCF4DE}" /F >NUL 2>&1
 :: Remove Pictures
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{24ad3ad4-a569-4530-98e1-ab02f9417aa8}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3ADD1653-EB32-4cb0-BBD7-DFA0ABB5ACCA}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{24ad3ad4-a569-4530-98e1-ab02f9417aa8}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3ADD1653-EB32-4cb0-BBD7-DFA0ABB5ACCA}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{24AD3AD4-A569-4530-98E1-AB02F9417AA8}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3ADD1653-EB32-4CB0-BBD7-DFA0ABB5ACCA}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{24AD3AD4-A569-4530-98E1-AB02F9417AA8}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3ADD1653-EB32-4CB0-BBD7-DFA0ABB5ACCA}" /F >NUL 2>&1
 :: Remove Videos
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{A0953C92-50DC-43bf-BE83-3742FED03C9C}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{f86fa3ab-70d2-4fc7-9c99-fcbf05467f3a}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{A0953C92-50DC-43bf-BE83-3742FED03C9C}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{f86fa3ab-70d2-4fc7-9c99-fcbf05467f3a}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{A0953C92-50DC-43BF-BE83-3742FED03C9C}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{F86FA3AB-70D2-4FC7-9C99-FCBF05467F3A}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{A0953C92-50DC-43BF-BE83-3742FED03C9C}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{F86FA3AB-70D2-4FC7-9C99-FCBF05467F3A}" /F >NUL 2>&1
 :: File Explorer Customizations
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "MapNetDrvBtn" /T REG_DWORD /D "0" /F >NUL 2>&1
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "ClearRecentDocsOnExit" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1119,7 +1193,6 @@ REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVer
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "PreXPSP2ShellProtocolBehavior" /T REG_DWORD /D "0" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "HideRecentlyAddedApps" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "NoNewAppAlert" /T REG_DWORD /D "1" /F >NUL 2>&1
-::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "WebViewBarricade" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Classes\Local Settings\SOFTWARE\Microsoft\Windows\Shell\Bags\AllFolders\Shell" /V "FolderType" /T REG_SZ /D "NotSpecIFied" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "AlwaysShowMenus" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "AutoCheckSelect" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1153,7 +1226,7 @@ REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Ad
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "ShowSecondsInSystemClock" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "ShowStatusBar" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "ShowSuperHidden" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "ShowSyncProviderNotIFications" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "ShowSyncProviderNotifications" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "ShowTaskViewButton" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "ShowTypeOverlay" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "SnapAssist" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1170,6 +1243,7 @@ REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Ad
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "TaskbarSmallIcons" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "UseCheckBoxes" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "WebView" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "WebViewBarricade" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoComplete" /V "Append Completion" /T REG_SZ /D "No" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoComplete" /V "AutoSuggest" /T reg_SZ /D "No" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CabinetState" /V "FullPath" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1198,7 +1272,6 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\E
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoCloseDragDropBands" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoDrivesInSendToMenu" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoInternetOpenWith" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoInternetOpenWith" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoLowDiskSpaceChecks" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoOnlinePrintsWizard" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoPublishingWizard" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1211,9 +1284,11 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\E
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoWebServices" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "NoUseStoreOpenWith" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\StigRegKey\Typing\TaskbarAvoidanceEnabled" /V "TaskbarAvoidanceEnabled" /T REG_DWORD /D "1" /F >NUL 2>&1
+:: Audit Process Creation
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit" /V "ProcessCreationIncludeCmdLine_Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: USB/external Duplicates
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\DelegateFolders\{F5FB2C77-0E2F-4A16-A381-3E560C68BC83}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\DelegateFolders\{F5FB2C77-0E2F-4A16-A381-3E560C68BC83}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\DelegateFolders\{F5FB2C77-0E2F-4A16-A381-3E560C68BC83}" /F >NUL 2>&1
 :: File History
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\FileHistory" /V "Disabled" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\FileHistory" /V "Disabled" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1228,26 +1303,26 @@ REG Delete "HKEY_CURRENT_USER\SOFTWARE\Classes\Local Settings\MUICache" /F >NUL 
 :: Notepad
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Notepad" /V "StatusBar" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Notepad" /V "fWrapAround" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Notepad" /V "StatusBar" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\SOFTWARE\Microsoft\Notepad" /V "StatusBar" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: People Bar
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "HidePeopleBar" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" /V "PeopleBand" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" /V "PeopleBand" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" /V "PeopleBand" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Provide Locally Relevant Content
 REG Add "HKEY_CURRENT_USER\Control Panel\International\User Profile" /V "HttpAcceptLanguageOptOut" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Remove Icon and Thumbnail Cache
-::IF EXIST %LOCALAPPDATA%\IconCache.db (ATTRIB -H %LOCALAPPDATA%\IconCache.db && DEL /F /S /Q %LOCALAPPDATA%\IconCache.db && FSUTIL File CreateNew %LOCALAPPDATA%\IconCache.db 0) >NUL 2>&1
-::IF EXIST %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db (ATTRIB -H %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db && DEL /F /S /Q %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db) >NUL 2>&1
+::IF EXIST %LOCALAPPDATA%\IconCache.db (ATTRIB -H %LOCALAPPDATA%\IconCache.db & DEL /F /S /Q %LOCALAPPDATA%\IconCache.db & FSUTIL File CreateNew %LOCALAPPDATA%\IconCache.db 0) >NUL 2>&1
+::IF EXIST %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db (ATTRIB -H %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db & DEL /F /S /Q %LOCALAPPDATA%\Microsoft\Windows\Explorer\*.db) >NUL 2>&1
 :: Remove 'Shortcut' Text and Arrow
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "Link" /T REG_BINARY /D "00000000" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\NamingTemplates" /V "ShortcutNameTemplate" /T REG_SZ /D "%s.lnk" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "Link" /T REG_BINARY /D "00000000" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\NamingTemplates" /V "ShortcutNameTemplate" /T REG_SZ /D "%s.lnk" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "Link" /T REG_BINARY /D "00000000" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "Link" /T REG_BINARY /D "00000000" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /V "29" /T REG_SZ /D "" /F >NUL 2>&1
 :: Remove Video Preview Border on Navigation Pane
-REG Add "HKEY_CLASSES_ROOT\SystemFileAssociations\image" /V "Treatment" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SystemFileAssociations\image" /V "Treatment" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\SystemFileAssociations\Image" /V "Treatment" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SystemFileAssociations\Image" /V "Treatment" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Show More Details in File Transfer Dialog
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager" /V "ConfirmationCheckBoxDoForAll" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager" /V "EnthusiastMode" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1273,24 +1348,24 @@ REG Add "HKEY_CURRENT_USER\Control Panel\Desktop" /V "SmoothScroll" /T REG_DWORD
 REG Add "HKEY_CURRENT_USER\Control Panel\Desktop" /V "UserPreferencesMask" /T REG_BINARY /D "9812038010000000" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\Control Panel\Desktop" /V "WaitToKillAppTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\Control Panel\Desktop" /V "WaitToKillServiceTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "ActiveWndTrackTimeout" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "ActiveWndTrkTimeout" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "AutoColorization" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "AutoEndTasks" /T REG_SZ /D "1" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "DockMoving" /T REG_SZ /D "1" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "DragFromMaximize" /T REG_SZ /D "1" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "DragFullWindows" /T REG_SZ /D "1" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "FontSmoothing" /T REG_SZ /D "2" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "ForegroundFlashCount" /T REG_DWORD /D "5" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "HungAppTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "LowLevelHooksTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "MenuShowDelay" /T REG_SZ /D "100" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "MouseWheelRouting" /T REG_DWORD /D "2" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "PaintDesktopVersion" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "SmoothScroll" /T REG_SZ /D "1" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "UserPrefenrencesMask" /T REG_BINARY /D "9812038010000000" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "WaitToKillAppTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop" /V "WaitToKillServiceTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "ActiveWndTrackTimeout" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "ActiveWndTrkTimeout" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "AutoColorization" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "AutoEndTasks" /T REG_SZ /D "1" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "DockMoving" /T REG_SZ /D "1" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "DragFromMaximize" /T REG_SZ /D "1" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "DragFullWindows" /T REG_SZ /D "1" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "FontSmoothing" /T REG_SZ /D "2" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "ForegroundFlashCount" /T REG_DWORD /D "5" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "HungAppTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "LowLevelHooksTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "MenuShowDelay" /T REG_SZ /D "100" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "MouseWheelRouting" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "PaintDesktopVersion" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "SmoothScroll" /T REG_SZ /D "1" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "UserPrefenrencesMask" /T REG_BINARY /D "9812038010000000" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "WaitToKillAppTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop" /V "WaitToKillServiceTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" /V "StartupDelayInMSec" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "AllowBlockingAppsAtShutdown" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control" /V "WaitToKillServiceTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
@@ -1300,14 +1375,14 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\ControlSet002" /V "WaitToKi
 REG Add "HKEY_CURRENT_USER\Control Panel\Keyboard" /V "KeyboardDelay" /T REG_SZ /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\Control Panel\Keyboard" /V "KeyboardSpeed" /T REG_SZ /D "31" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\Control Panel\Keyboard" /V "InitialKeyboardIndicators" /T REG_SZ /D "2147483650" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Keyboard" /V "KeyboardDelay" /T REG_SZ /D "0" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Keyboard" /V "KeyboardSpeed" /T REG_SZ /D "31" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Keyboard" /V "InitialKeyboardIndicators" /T REG_SZ /D "2147483650" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Keyboard" /V "KeyboardDelay" /T REG_SZ /D "0" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Keyboard" /V "KeyboardSpeed" /T REG_SZ /D "31" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Keyboard" /V "InitialKeyboardIndicators" /T REG_SZ /D "2147483650" /F >NUL 2>&1
 :: No Beep
 REG Add "HKEY_CURRENT_USER\Control Panel\Sound" /V "Beep" /T REG_SZ /D "no" /F >NUL 2>&1
 :: Window Animations
 REG Add "HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics" /V "MinAnimate" /T REG_SZ /D "0" /F >NUL 2>&1
-REG Add "HKEY_USERS\.DEFAULT\Control Panel\Desktop\WindowMetrics" /V "MinAnimate" /T REG_SZ /D "0" /F >NUL 2>&1
+REG Add "HKEY_USERS\.Default\Control Panel\Desktop\WindowMetrics" /V "MinAnimate" /T REG_SZ /D "0" /F >NUL 2>&1
 :: Task Manager More Details
 REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager" /V "Preferences" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\TaskManager" /V "StartUpTab" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1374,81 +1449,81 @@ REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\SystemFileAssociations\.tIFf\She
 :: Add to 'New' Menu
 IF EXIST "%APPDATA%\Microsoft\Windows\SendTo\Mail recipient.*" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\SendTo\Mail recipient.*" >NUL 2>&1
 REG Add "HKEY_CLASSES_ROOT\.cmd\ShellNew" /V "NullFile" /T REG_SZ /D "" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\Drive\shellex\-ContextMenuHandlers\{fbeb8a05-beee-4442-804e-409d6c4515e9}" /ve /T REG_SZ /D "" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\batfile\shellex\-ContextMenuHandlers\Compatibility" /ve /T REG_SZ /D "{1d27f844-3a1f-4410-85ac-14651078412d}" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\cmdfile\shellex\-ContextMenuHandlers\Compatibility" /ve /T REG_SZ /D "{1d27f844-3a1f-4410-85ac-14651078412d}" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\exefile\shellex\-ContextMenuHandlers\Compatibility" /ve /T REG_SZ /D "{1d27f844-3a1f-4410-85ac-14651078412d}" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\Drive\ShellEx\-ContextMenuHandlers\{FBEB8A05-BEEE-4442-804E-409D6C4515E9}" /ve /T REG_SZ /D "" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\batfile\ShellEx\-ContextMenuHandlers\Compatibility" /ve /T REG_SZ /D "{1D27F844-3A1F-4410-85AC-14651078412D}" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\cmdfile\ShellEx\-ContextMenuHandlers\Compatibility" /ve /T REG_SZ /D "{1D27F844-3A1F-4410-85AC-14651078412D}" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\exefile\ShellEx\-ContextMenuHandlers\Compatibility" /ve /T REG_SZ /D "{1D27F844-3A1F-4410-85AC-14651078412D}" /F >NUL 2>&1
 :: Allow Mapped Drives in Command Prompt
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /V "EnableLinkedConnections" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Cast to Device
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /V "{7AD84985-87B4-4a16-BE58-8B72A5B390F7}" /T REG_SZ /D "Play to menu" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /V "{7AD84985-87B4-4A16-BE58-8B72A5B390F7}" /T REG_SZ /D "Play to menu" /F >NUL 2>&1
 :: CD Burning
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoCDBurning" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Copy as path
-REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\shell\windows.copyaspath" /V "CanonicalName" /T REG_SZ /D "{707C7BC6-685A-4A4D-A275-3966A5A3EFAA}" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\shell\windows.copyaspath" /V "CommandStateHandler" /T REG_SZ /D "{3B1599F9-E00A-4BBF-AD3E-B3F99FA87779}" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\shell\windows.copyaspath" /V "CommandStateSync" /T REG_SZ /D "" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\shell\windows.copyaspath" /V "Description" /T REG_SZ /D "@shell32.dll,-30336" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\shell\windows.copyaspath" /V "Icon" /T REG_SZ /D "imageres.dll,-5302" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\shell\windows.copyaspath" /V "InvokeCommandOnSelection" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\shell\windows.copyaspath" /V "MUIVerb" /T REG_SZ /D "@shell32.dll,-30329" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\shell\windows.copyaspath" /V "VerbHandler" /T REG_SZ /D "{f3d06e7c-1e45-4a26-847e-f9fcdee59be0}" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\shell\windows.copyaspath" /V "VerbName" /T REG_SZ /D "copyaspath" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\AllfileSystemObjects\shell\windows.copyaspath" /ve /T REG_SZ /D "Copy path" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\Shell\Windows.CopyAsPath" /V "CanonicalName" /T REG_SZ /D "{707C7BC6-685A-4A4D-A275-3966A5A3EFAA}" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\Shell\Windows.CopyAsPath" /V "CommandStateHandler" /T REG_SZ /D "{3B1599F9-E00A-4BBF-AD3E-B3F99FA87779}" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\Shell\Windows.CopyAsPath" /V "CommandStateSync" /T REG_SZ /D "" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\Shell\Windows.CopyAsPath" /V "Description" /T REG_SZ /D "@shell32.dll,-30336" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\Shell\Windows.CopyAsPath" /V "Icon" /T REG_SZ /D "Imageres.dll,-5302" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\Shell\Windows.CopyAsPath" /V "InvokeCommandOnSelection" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\Shell\Windows.CopyAsPath" /V "MUIVerb" /T REG_SZ /D "@shell32.dll,-30329" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\Shell\Windows.CopyAsPath" /V "VerbHandler" /T REG_SZ /D "{F3D06E7C-1E45-4A26-847E-F9FCDEE59BE0}" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\Shell\Windows.CopyAsPath" /V "VerbName" /T REG_SZ /D "copyaspath" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllfileSystemObjects\Shell\Windows.CopyAsPath" /ve /T REG_SZ /D "Copy As Path" /F >NUL 2>&1
 :: Copy To / Move To
-REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\shellex\ContextMenuHandlers\Copy To" /ve /T REG_SZ /D "{C2FBB630-2971-11D1-A18C-00C04FD75D13}" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\shellex\ContextMenuHandlers\Move To" /ve /T REG_SZ /D "{C2FBB631-2971-11D1-A18C-00C04FD75D13}" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\ShellEx\ContextMenuHandlers\Copy To" /ve /T REG_SZ /D "{C2FBB630-2971-11D1-A18C-00C04FD75D13}" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\AllFileSystemObjects\ShellEx\ContextMenuHandlers\Move To" /ve /T REG_SZ /D "{C2FBB631-2971-11D1-A18C-00C04FD75D13}" /F >NUL 2>&1
 :: Extract All Context Menu for ZIP Files
-REG Delete "HKEY_CLASSES_ROOT\CompressedFolder\ShellEx\ContextMenuHandlers\{b8cdcb65-b1bf-4b42-9428-1dfdb7ee92af}" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\CompressedFolder\ShellEx\ContextMenuHandlers\{B8CDCB65-B1BF-4B42-9428-1DFDB7EE92AF}" /F >NUL 2>&1
 :: Give Access To
-::REG Delete "HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\Sharing" /F >NUL 2>&1
-::REG Delete "HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\Sharing" /F >NUL 2>&1
-::REG Delete "HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\Sharing" /F >NUL 2>&1
-::REG Delete "HKEY_CLASSES_ROOT\Drive\shellex\ContextMenuHandlers\Sharing" /F >NUL 2>&1
-::REG Delete "HKEY_CLASSES_ROOT\LibraryFolder\background\shellex\ContextMenuHandlers\Sharing" /F >NUL 2>&1
-::REG Delete "HKEY_CLASSES_ROOT\UserLibraryFolder\shellex\ContextMenuHandlers\Sharing" /F >NUL 2>&1
+::REG Delete "HKEY_CLASSES_ROOT\*\ShellEx\ContextMenuHandlers\Sharing" /F >NUL 2>&1
+::REG Delete "HKEY_CLASSES_ROOT\Directory\Background\ShellEx\ContextMenuHandlers\Sharing" /F >NUL 2>&1
+::REG Delete "HKEY_CLASSES_ROOT\Directory\ShellEx\ContextMenuHandlers\Sharing" /F >NUL 2>&1
+::REG Delete "HKEY_CLASSES_ROOT\Drive\ShellEx\ContextMenuHandlers\Sharing" /F >NUL 2>&1
+::REG Delete "HKEY_CLASSES_ROOT\LibraryFolder\background\ShellEx\ContextMenuHandlers\Sharing" /F >NUL 2>&1
+::REG Delete "HKEY_CLASSES_ROOT\UserLibraryFolder\ShellEx\ContextMenuHandlers\Sharing" /F >NUL 2>&1
 :: Include in Libraries
 REG Delete "HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandlers\Library Location" /F >NUL 2>&1
 :: ISO Burn
-REG Delete "HKEY_CLASSES_ROOT\Windows.IsoFile\shell\burn" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\Windows.IsoFile\Shell\Burn" /F >NUL 2>&1
 :: Login Without Password in "control userpasswords2" or netplwiz
 REG Add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\PasswordLess\Device" /V "DevicePasswordLessBuildVersion" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Meet Now
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "HideSCAMeetNow" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "HideSCAMeetNow" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Msi Extract
-REG Add "HKEY_CLASSES_ROOT\Msi.Package\shell\Extract" /VE /T REG_SZ /D "Extract MSI" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\Msi.Package\shell\Extract" /V "NeverDefault" /T REG_SZ /D "" /F >NUL 2>&1
-REG Add "HKEY_CLASSES_ROOT\Msi.Package\shell\Extract\command" /VE  /T REG_SZ /D "msiexec.exe /a "%1" /qb TARGETDIR="%1 Contents"" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\Msi.Package\Shell\Extract" /VE /T REG_SZ /D "Extract MSI" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\Msi.Package\Shell\Extract" /V "NeverDefault" /T REG_SZ /D "" /F >NUL 2>&1
+REG Add "HKEY_CLASSES_ROOT\Msi.Package\Shell\Extract\Command" /VE  /T REG_SZ /D "msiexec.exe /a "%1" /qb TARGETDIR="%1 Contents"" /F >NUL 2>&1
 :: 'New' Menu
 REG Delete "HKEY_CLASSES_ROOT\.contact\ShellNew" /F >NUL 2>&1
 REG Delete "HKEY_CLASSES_ROOT\.library-ms\ShellNew" /F >NUL 2>&1
-::REG Delete "HKEY_CLASSES_ROOT\Folder\shellex\ContextMenuHandlers\Library Location" /F >NUL 2>&1
+::REG Delete "HKEY_CLASSES_ROOT\Folder\ShellEx\ContextMenuHandlers\Library Location" /F >NUL 2>&1
 REG Delete "HKEY_CLASSES_ROOT\.rtf\ShellNew" /F >NUL 2>&1
 :: Number of Selections on Explorer
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "MultipleInvokePromptMinimum" /T REG_DWORD /D "200" /F >NUL 2>&1
 :: Pin to Quick Access
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\shell\pintohome" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\Shell\PinToHome" /F >NUL 2>&1
 :: Restore Previous Versions (File History Properties Tab)
-REG Delete "HKEY_CLASSES_ROOT\AllFilesystemObjects\shellex\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
-REG Delete "HKEY_CLASSES_ROOT\CLSID\{450D8FBA-AD25-11D0-98A8-0800361B1103}\shellex\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
-REG Delete "HKEY_CLASSES_ROOT\Directory\shellex\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
-REG Delete "HKEY_CLASSES_ROOT\Drive\shellex\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\AllFilesystemObjects\ShellEx\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\CLSID\{450D8FBA-AD25-11D0-98A8-0800361B1103}\ShellEx\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\Directory\ShellEx\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\Drive\ShellEx\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
 :: Restore Previous Versions (File History Context Menu)
-REG Delete "HKEY_CLASSES_ROOT\AllFilesystemObjects\shellex\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
-REG Delete "HKEY_CLASSES_ROOT\CLSID\{450D8FBA-AD25-11D0-98A8-0800361B1103}\shellex\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
-REG Delete "HKEY_CLASSES_ROOT\Directory\shellex\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
-REG Delete "HKEY_CLASSES_ROOT\Drive\shellex\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\AllFilesystemObjects\ShellEx\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\CLSID\{450D8FBA-AD25-11D0-98A8-0800361B1103}\ShellEx\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\Directory\ShellEx\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\Drive\ShellEx\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer" /V "NoPreviousVersionsPage" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "NoPreviousVersionsPage" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PreviousVersions" /V "DisableLocalPage" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer" /V "NoPreviousVersionsPage" /F >NUL 2>&1
 REG Delete "HKEY_CURRENT_USER\Software\Policies\Microsoft\PreviousVersions" /V "DisableLocalPage" /F >NUL 2>&1
 :: 'Share'
-::REG Delete "HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\ModernSharing" /F >NUL 2>&1
+::REG Delete "HKEY_CLASSES_ROOT\*\ShellEx\ContextMenuHandlers\ModernSharing" /F >NUL 2>&1
 :: Windows Picture and Fax Viewer
-REG Delete "HKEY_CLASSES_ROOT\SystemFileAssociations\image\ShellEx\ContextMenuHandlers\ShellImagePreview" /F >NUL 2>&1
+REG Delete "HKEY_CLASSES_ROOT\SystemFileAssociations\Image\ShellEx\ContextMenuHandlers\ShellImagePreview" /F >NUL 2>&1
 :: Win-X Menu Shortcuts
 ::IF NOT exist "%LOCALAPPDATA%\Microsoft\Windows\WinX\Group2\Registry Editor" (mklink /h "%LOCALAPPDATA%\Microsoft\Windows\WinX\Group2\Registry Editor" %SYSTEMROOT%\regedit.exe) >NUL 2>&1
 ::IF NOT exist "%LOCALAPPDATA%\Microsoft\Windows\WinX\Group3\Services" (mklink "%LOCALAPPDATA%\Microsoft\Windows\WinX\Group3\Services" %SYSTEMROOT%\System32\services.msc) >NUL 2>&1
@@ -1457,6 +1532,8 @@ REG Delete "HKEY_CLASSES_ROOT\SystemFileAssociations\image\ShellEx\ContextMenuHa
 :: Date ^& time
 ::REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time" /V "Start" /T REG_DWORD /D "3" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\tzautoupdate" /V "Start" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /V "DynamicDaylightTimeDisabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /V "TimeZoneKeyName" /T REG_SZ /D "Eastern Standard Time" /F >NUL 2>&1
 
 ECHO :::::::: Update ^& Security
 :::: Windows Update
@@ -1472,8 +1549,8 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore" /V "AutoDo
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata" /V "PreventDeviceMetadataFromNetwork" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" /V "PreventDeviceMetadataFromNetwork" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Current\Device\Update" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Update" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Update\ExcludeWUDriversInQualityUpdate" /V "Value" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\Update" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\Update\ExcludeWUDriversInQualityUpdate" /V "Value" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1490,21 +1567,21 @@ REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOpt
 :: Windows Defender
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender" /V "DisableAntiVirus" /T REG_DWORD /D "0" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\Features" /V "TamperProtection" /T REG_DWORD /D "1" /F >NUL 2>&1
-::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" /V "SubmitSamplesConsent" /T REG_DWORD /D "2" /F >NUL 2>&1
+::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet" /V "SubmitSamplesConsent" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows Security Health\State" /V "AccountProtection_MicrosoftAccount_Disconnected" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows Security Health\State" /V "AppAndBrowser_StoreAppsSmartScreenOff" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\NotIFications" /V "DisableEnhancedNotIFications" /T reg_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\NotIFications" /V "DisableNotIFications" /T reg_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Virus and threat protection" /V "SummaryNotIFicationDisabled" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Notifications" /V "DisableEnhancedNotifications" /T reg_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Notifications" /V "DisableNotifications" /T reg_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Virus and Threat Protection" /V "SummaryNotificationDisabled" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MRT" /V "DontOfferThroughWUAU" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MRT" /V "DontReportInfectionInformation" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine" /V "MpEnablePus" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting" /V "DisableGenericReports" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan" /V "CheckForSignaturesBeforeRunningScan" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" /V "DisableBlockAtFirstSeen" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" /V "LocalSettingOverrideSpynetReporting" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" /V "SpyNetReporting" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet" /V "SpyNetReportingLocation" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet" /V "DisableBlockAtFirstSeen" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet" /V "LocalSettingOverrideSpyNetReporting" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet" /V "SpyNetReporting" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet" /V "SpyNetReportingLocation" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Core Isolation / Device Guard
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard" /V "EnableVirtualizationBasedSecurity" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1531,7 +1608,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /V "NoGenTicket" /T REG_DWORD /D "1" /F >NUL 2>&1
 
 ECHO :::::::: Windows Search, Cortana, Indexing/Prefetch
-TASKLIST | FIND /I "SearchUI.exe" && TASKKILL /F /IM SearchUI.exe
+TASKLIST | FIND /I "SearchUI.exe" & TASKKILL /F /IM SearchUI.exe
 RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy" /F >NUL 2>&1
 REG Add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Cortana.exe" /V "Debugger" /t REG_SZ /d "%SYSTEMROOT%\System32\taskkill.exe" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" /V "EnableFindMyFiles" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1638,7 +1715,7 @@ SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\LanguageComponentsInstaller\Ins
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\LanguageComponentsInstaller\ReconcileLanguageResources" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\LanguageComponentsInstaller\Uninstallation" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\License Manager\TempSignedLicenseExchange" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Location\NotIFications" >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Location\Notifications" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Location\WindowsActionDialog" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\MUI\LPRemove" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Maintenance\WinSAT" >NUL 2>&1
@@ -1650,7 +1727,7 @@ SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\MemoryDiagnostic\ProcessMemoryD
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\MemoryDiagnostic\RunFullMemoryDiagnostic" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Mobile Broadband Accounts\MNO Metadata Parser" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\NetTrace\GatherNetworkInfo" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\NlaSvc\WIFiTask" >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\NlaSvc\WiFiTask" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Offline Files\Synchronization" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PI\Secure-Boot-Update" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PI\Sqm-Tasks" >NUL 2>&1
@@ -1706,7 +1783,7 @@ SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\USO_UxBroker
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\USO_UxBroker_Display" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\USO_UxBroker_ReadyToReboot" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WCM\WIFiTask" >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WCM\WiFiTask" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WDI\ResolutionHost" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WOF\WIM-Hash-Management" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WOF\WIM-Hash-Validation" >NUL 2>&1
@@ -1725,7 +1802,7 @@ SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Work Folders\Work Folders Maint
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Workplace Join\Automatic-Device-Join" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Workplace Join\Device-Sync" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Workplace Join\Device-Sync" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WwanSvc\NotIFicationTask" >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WwanSvc\NotificationTask" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WwanSvc\OobeDiscovery" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\Xbgm" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\XblGameSaveTask" >NUL 2>&1
@@ -1735,7 +1812,7 @@ NETSH AdvFirewall Firewall Add Rule Name="Compatability Telemetry Runner" Action
 
 ECHO :::::::: Services
 ::for /D%%G in (CertPropSvc,CDPSvc,CDPUserSvc,CscService,DiagTrack,DoSvc,DevicesFlow,DevicesFlowUserSvc,DevQueryBroker,DsmSvc,DusmSvc,DPS,diagnosticshub.standardcollector.service,dmwappushservice,MapsBroker,MessagingService,OneSyncSvc,PimIndexMaintenanceSvc,PrintWorkflowUserSvc,PcaSvc,RemoteRegistry,SmsRouter,Spooler,TrkWks,StiSvc,SecurityHealthService,Sense,UnistoreSvc,UserDataSvc,WpnUserService,WerSvc,WMPNetworkSvc,WSearch,WdNisDrv,WdNisSvc,WinDefend) do (
-::sc config %%G start= disabled )
+::sc Config %%G start= disabled )
 ::REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DeviceAssociationBrokerSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\iphlpsvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Sense" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
@@ -1765,7 +1842,7 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\HomeGroupListener"
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\HomeGroupProvider" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\icssvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\idsvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lanmanworkstation" /V "Start" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManworkstation" /V "Start" /T REG_DWORD /D "3" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lfsvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MapsBroker" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Maps\MapsToastTask" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
@@ -1785,7 +1862,7 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NaturalAuthenticat
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Ndu" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBIOS" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetTcpPortSharing" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetTCPPortSharing" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PcaSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\perceptionsimulation" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PhoneSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
@@ -1838,18 +1915,18 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XboxNetApiSvc" /V 
 :::::::: Settings Control Panel Clean-Up
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "SettingsPageVisibility" /T REG_SZ /D "hide:mobile-Devices;maps;gaming-gamebar;gaming-gamedvr;gaming-broadcasting;gaming-gamemode;gaming-xboxnetworking;cortana-windowssearch;cortana-talktocortana;cortana-permissions;cortana-moredetails;windowsinsider;holographic-audio;privacy-holographic-environment;holographic-headset;holographic-management;remotedesktop" /F >NUL 2>&1
 
-ECHO. && ECHO Tweaks Have Been Completed Sucessefully.
-ECHO. && ECHO Additionally you can run a script to remove unnecessary Windows Features and Windows UWP Applications.
-CHOICE /T 15 /C YN /D N /M "Would you like to REMOVE these features?"
+ECHO. & ECHO Tweaks Have Been Completed Sucessefully.
+ECHO. & ECHO Additionally you can run a script to remove unnecessary Windows Features and Windows UWP Applications.
+CHOICE /T 15 /C YN /D N /M "Would you like to REMOVE these Features?"
 IF %ERRORLEVEL%==1 (GOTO :Bloatware) ELSE (GOTO :Reboot)
 
 :Reboot
-ECHO. && ECHO Your SYSTEM needs to reboot for changes to take effect. && choice.exe /T 15 /C YN /D N /M "Would you like to REBOOT now?"
-IF %ERRORLEVEL%==1 (SHUTDOWN /R /F /D P:4:1 /T 5 /C "Windows 10 C-OL - Custom Tweaks Collection Script") ELSE (CALL Explorer.exe)
+ECHO. & ECHO Your SYSTEM needs to reboot for changes to take effect. & choice.exe /T 15 /C YN /D N /M "Would you like to REBOOT now?"
+IF %ERRORLEVEL%==1 (SHUTDOWN /R /F /D P:4:1 /T 5 /C "Windows 10 C-OL - Custom Tweaks Collection Script") ELSE (CALL EXPLORER.EXE)
 GOTO :EOF
 
 :Bloatware
-ECHO. && ECHO NOTICE: It can take some time while all features are been removed.
+ECHO. & ECHO NOTICE: It can take some time while all Features are been removed.
 ECHO :::::::: Windows Capabilities
 ::DISM /online /Remove-Capability /CapabilityName:Language.Basic~~~en-US~0.0.1.0 >NUL 2>&1
 ::DISM /online /Remove-Capability /CapabilityName:Media.WindowsMediaPlayer~~~~0.0.12.0 >NUL 2>&1
