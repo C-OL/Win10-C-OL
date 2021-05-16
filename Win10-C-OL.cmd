@@ -191,17 +191,17 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive" /V "PreventNetworkTraff
 :::::::: .NET Framework
 :: Strong Cryptography
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v2.0.50727" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v2.0.50727" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v2.0.50727" /V "SystemDefaultTLSVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v3.0" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v3.0" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NU
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v3.0" /V "SystemDefaultTLSVersions" /T REG_DWORD /D "1" /F >NU
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" /V "SystemDefaultTLSVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v2.0.50727" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v2.0.50727" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v2.0.50727" /V "SystemDefaultTLSVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v3.0" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v3.0" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v3.0" /V "SystemDefaultTLSVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v4.0.30319" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v4.0.30319" /V "SystemDefaultTlsVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v4.0.30319" /V "SystemDefaultTLSVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Use Latest CLR
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework" /V "OnlyUseLatestCLR" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework" /V "OnlyUseLatestCLR" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -262,7 +262,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main" /V "Autor
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers" /V "DisableAutoplay" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoAutorun" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoDriveTypeAutoRun" /T REG_DWORD /D "255" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\cdrom" /V "Autorun" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\CDROM" /V "Autorun" /T REG_DWORD /D "0" /F >NUL 2>&1
 :::::::: Hardware Related Tweaks
 :: Block Legacy File System Filter Drivers
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\I/O System" /V "IoBlockLegacyFsFilters" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -291,7 +291,7 @@ BCDEDIT /Set {Current} BootMenuPolicy Legacy >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "NoDataExecutionPrevention" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "NoHeapTerminationOnCorruption" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "DisableHHDEP" /T REG_DWORD /D "0" /F >NUL 2>&1
-START /B /WAIT BCDEDIT /Set {Current} nx OptOut >NUL 2>&1
+BCDEDIT /Set {Current} NX OptOut >NUL 2>&1
 :: NTFS File System
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "ContigFileAllocSize" /T REG_DWORD /D "200" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "LongPathsEnabled" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -390,7 +390,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\HostedCache\Dis
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\CooperativeCaching" /V "Enable" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\Service" /V "Enable" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: CertIFicate Revocation Check
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Safer\CodeIdentIFiers" /V "AuthenticodeEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Safer\CodeIdentifiers" /V "AuthenticodeEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: CredSSP Encryption
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /V "AllowEncryptionOracle" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Detailed Data Usage
@@ -425,7 +425,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main" /V "NoPro
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\\Policies\Microsoft\Peernet" /V "Disabled" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: NetBIOS over TCP/IP
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\NetBT\Parameters" /V "NetbiosOptions" /T REG_DWORD /D "2" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netbt\Parameters" /V "NoNameReleaseOnDemand" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters" /V "NoNameReleaseOnDemand" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Network Auto Install
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup" /V "GlobalAutoSetup" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Domain" /V "AutoSetup" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -573,7 +573,7 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters"
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "UseDomainNameDevolution" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "UseZeroBroadCast" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: TCP Timestamps
-NETSH Int TCP Set Global Timestamps=Disabled >NUL 2>&1
+NETSH Int TCP Set Global TimeStamps=Disabled >NUL 2>&1
 :: Terminal Server Shadowing
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /V "Shadow" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -665,8 +665,8 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization"
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization" /V "NoLockScreenSlideshow" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "DisableAcrylicBackgroundOnLogon" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Logon Screen On Resume
-::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /V "ScreenSaverIsSecure" /T REG_DWORD /D "0" /F >NUL 2>&1
-::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System\Power" /V "PromptPasswordOnResume" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /V "ScreenSaverIsSecure" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System\Power" /V "PromptPasswordOnResume" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Welcome Screen
 ::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoWelcomeScreen" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoWelcomeScreen" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1142,9 +1142,12 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersio
 :: User's Files
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" /V "{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /V "System.IsPinnedToNameSpaceTree" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /V "System.IsPinnedToNameSpaceTree" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /V "System.IsPinnedToNameSpaceTree" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CLSID\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /F >NUL 2>&1
+::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /F >NUL 2>&1
+::REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{59031A47-3F72-44A7-89C5-5595FE6B30EE}" /F >NUL 2>&1
 :: Quick Access Show Frequent Folders and Recent Files
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HomeFolderDesktop\NameSpace\DelegateFolders\{3134EF9C-6B18-4996-AD04-ED5912E00EB5}" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HomeFolderDesktop\NameSpace\DelegateFolders\{3936E9E4-D92C-4EEE-A85A-BC16D5EA0819}" /F >NUL 2>&1
@@ -1608,7 +1611,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /V "NoGenTicket" /T REG_DWORD /D "1" /F >NUL 2>&1
 
 ECHO :::::::: Windows Search, Cortana, Indexing/Prefetch
-TASKLIST | FIND /I "SearchUI.exe" & TASKKILL /F /IM SearchUI.exe
+TASKLIST | FIND /I "SearchUI.exe" && TASKKILL /F /IM SearchUI.exe >NUL 2>&1
 RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy" /F >NUL 2>&1
 REG Add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Cortana.exe" /V "Debugger" /t REG_SZ /d "%SYSTEMROOT%\System32\taskkill.exe" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" /V "EnableFindMyFiles" /T REG_DWORD /D "0" /F >NUL 2>&1
