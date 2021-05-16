@@ -156,7 +156,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer" /V "Integrated
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer" /V "DisableFlashInIE" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons" /V "FlashPlayerEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Microsoft OneDrive
-TASKLIST | FIND /I "OneDrive.exe" && TASKKILL /F /IM OneDrive.exe >NUL 2>&1
+TASKLIST | FIND /I "OneDrive.exe" >NUL 2>&1 && TASKKILL /F /IM OneDrive.exe >NUL 2>&1
 if %OS%==x86 (set "OD=%SYSTEMROOT%\SYSTEM32") else if %OS%==AMD64 (set "OD=%SYSTEMROOT%\SysWOW64")
 IF EXIST %OD%\OneDriveSetup.exe (TAKEOWN /F %OD%\OneDrive* && ICACLS %OD%\OneDrive* /GRANT Administrators:F && %OD%\OneDriveSetup.exe /uninstall && DEL /F /S /Q %OD%\OneDrive*) >NUL 2>&1
 IF EXIST "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" >NUL 2>&1
@@ -193,7 +193,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\OneDrive" /V "PreventNetworkTraff
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v2.0.50727" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v2.0.50727" /V "SystemDefaultTLSVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v3.0" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v3.0" /V "SystemDefaultTLSVersions" /T REG_DWORD /D "1" /F >NU
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v3.0" /V "SystemDefaultTLSVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319" /V "SystemDefaultTLSVersions" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\.NETFramework\v2.0.50727" /V "SchUseStrongCrypto" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -737,7 +737,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Assistance\Client\1.0" /
 :: F1 key - Help and Support
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\Win32" /ve /T REG_SZ /D "" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\Win64" /ve /T REG_SZ /D "" /F >NUL 2>&1
-TASKLIST | FIND /I "HelpPane.exe" && TASKKILL /F /IM HelpPane.exe >NUL 2>&1
+TASKLIST | FIND /I "HelpPane.exe" >NUL 2>&1 && TASKKILL /F /IM HelpPane.exe >NUL 2>&1
 IF EXIST %SYSTEMROOT%\HelpPane.exe (TAKEOWN /F %SYSTEMROOT%\HelpPane.exe && ICACLS %SYSTEMROOT%\HelpPane.exe /INHERITANCE:R /REMOVE Administrators) >NUL 2>&1
 :: Telemetry
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /V "AllowTelemetry" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1611,7 +1611,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /V "NoGenTicket" /T REG_DWORD /D "1" /F >NUL 2>&1
 
 ECHO :::::::: Windows Search, Cortana, Indexing/Prefetch
-TASKLIST | FIND /I "SearchUI.exe" && TASKKILL /F /IM SearchUI.exe >NUL 2>&1
+TASKLIST | FIND /I "SearchUI.exe" >NUL 2>&1 && TASKKILL /F /IM SearchUI.exe >NUL 2>&1
 RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy" /F >NUL 2>&1
 REG Add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Cortana.exe" /V "Debugger" /t REG_SZ /d "%SYSTEMROOT%\System32\taskkill.exe" /F >NUL 2>&1
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" /V "EnableFindMyFiles" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1810,8 +1810,8 @@ SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WwanSvc\OobeDiscovery" >NUL 2>&
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\Xbgm" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\XblGameSaveTask" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\XblGameSaveTaskLogon" >NUL 2>&1
-NETSH AdvFirewall Firewall Add Rule Name="Compatability Telemetry Runner" Action="Block" Dir="In" Interface="Any" Program="%SYSTEMDRIVE%\Windows\System32\CompatTelRunner.exe" Description="Disallow CompatTelRunner to connect in from the Internet." Enable=Yes >NUL 2>&1
-NETSH AdvFirewall Firewall Add Rule Name="Compatability Telemetry Runner" Action="Block" Dir="Out" Interface="Any" Program="%SYSTEMDRIVE%\Windows\System32\CompatTelRunner.exe" Description="Disallow CompatTelRunner to connect out to the Internet." Enable=Yes >NUL 2>&1
+NETSH AdvFirewall Firewall Add Rule Name="Compatibility Telemetry Runner" Action="Block" Dir="In" Interface="Any" Program="%SYSTEMDRIVE%\Windows\System32\CompatTelRunner.exe" Description="Disallow CompatTelRunner to connect in from the Internet." Enable=Yes >NUL 2>&1
+NETSH AdvFirewall Firewall Add Rule Name="Compatibility Telemetry Runner" Action="Block" Dir="Out" Interface="Any" Program="%SYSTEMDRIVE%\Windows\System32\CompatTelRunner.exe" Description="Disallow CompatTelRunner to connect out to the Internet." Enable=Yes >NUL 2>&1
 
 ECHO :::::::: Services
 ::for /D%%G in (CertPropSvc,CDPSvc,CDPUserSvc,CscService,DiagTrack,DoSvc,DevicesFlow,DevicesFlowUserSvc,DevQueryBroker,DsmSvc,DusmSvc,DPS,diagnosticshub.standardcollector.service,dmwappushservice,MapsBroker,MessagingService,OneSyncSvc,PimIndexMaintenanceSvc,PrintWorkflowUserSvc,PcaSvc,RemoteRegistry,SmsRouter,Spooler,TrkWks,StiSvc,SecurityHealthService,Sense,UnistoreSvc,UserDataSvc,WpnUserService,WerSvc,WMPNetworkSvc,WSearch,WdNisDrv,WdNisSvc,WinDefend) do (
@@ -1918,7 +1918,7 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\XboxNetApiSvc" /V 
 :::::::: Settings Control Panel Clean-Up
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "SettingsPageVisibility" /T REG_SZ /D "hide:mobile-Devices;maps;gaming-gamebar;gaming-gamedvr;gaming-broadcasting;gaming-gamemode;gaming-xboxnetworking;cortana-windowssearch;cortana-talktocortana;cortana-permissions;cortana-moredetails;windowsinsider;holographic-audio;privacy-holographic-environment;holographic-headset;holographic-management;remotedesktop" /F >NUL 2>&1
 
-ECHO. & ECHO Tweaks Have Been Completed Sucessefully.
+ECHO. & ECHO Tweaks Have Been Completed Successfully.
 ECHO. & ECHO Additionally you can run a script to remove unnecessary Windows Features and Windows UWP Applications.
 CHOICE /T 15 /C YN /D N /M "Would you like to REMOVE these Features?"
 IF %ERRORLEVEL%==1 (GOTO :Bloatware) ELSE (GOTO :Reboot)
@@ -1929,49 +1929,72 @@ IF %ERRORLEVEL%==1 (SHUTDOWN /R /F /D P:4:1 /T 5 /C "Windows 10 C-OL - Custom Tw
 GOTO :EOF
 
 :Bloatware
-ECHO. & ECHO NOTICE: It can take some time while all Features are been removed.
+ECHO. & ECHO NOTICE: It can take some time while all Features are been removed. & ECHO.
 ECHO :::::::: Windows Capabilities
-::DISM /online /Remove-Capability /CapabilityName:Language.Basic~~~en-US~0.0.1.0 >NUL 2>&1
-::DISM /online /Remove-Capability /CapabilityName:Media.WindowsMediaPlayer~~~~0.0.12.0 >NUL 2>&1
-::DISM /online /Remove-Capability /CapabilityName:Microsoft.Windows.MSPaint~~~~0.0.1.0 >NUL 2>&1
-::DISM /online /Remove-Capability /CapabilityName:Microsoft.Windows.Notepad~~~~0.0.1.0 >NUL 2>&1
-::DISM /online /Remove-Capability /CapabilityName:Microsoft.Windows.PowerShell.ISE~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Analog.Holographic.Desktop~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:App.StepsRecorder~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:App.Support.QuickAssist~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Browser.InternetExplorer~~~~0.0.11.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Hello.Face.18330~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Hello.Face.18967~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Hello.Face.Migration.18330~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Hello.Face.Migration.18967~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Language.Handwriting~~~en-US~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Language.OCR~~~en-US~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Language.Speech~~~en-US~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Language.TextToSpeech~~~en-US~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:MathRecognizer~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Microsoft.Windows.WordPad~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:OneCoreUAP.OneSync~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:OpenSSH.Client~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:Print.Fax.Scan~~~~0.0.1.0 >NUL 2>&1
-DISM /online /Remove-Capability /CapabilityName:XPS.Viewer~~~~0.0.1.0 >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Language.Basicen-US*" | Remove-WindowsCapability -Online" >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Media.WindowsMediaPlayer~0.0.12.0 >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*" | Remove-WindowsCapability -Online" >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.Notepad*" | Remove-WindowsCapability -Online" >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.PowerShell.ISE*" | Remove-WindowsCapability -Online" >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Rsat.ServerManager.Tools*" | Remove-WindowsCapability -Online" >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT.ActiveDirectory.DS-LDS.Tools*" | Remove-WindowsCapability -Online" >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Windows.Client.ShellComponents*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Analog.Holographic.Desktop*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "App.StepsRecorder*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "App.Support.QuickAssist*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Browser.InternetExplorer*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Hello.Face*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Language.Handwritingen-US*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Language.OCRen-US*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Language.Speechen-US*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Language.TextToSpeechen-US*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "MathRecognizer*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.PowerShell.ISE*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.WordPad*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "OneCoreUAP.OneSync*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "OpenSSH.Client*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "OpenSSH.Server*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Print.Fax.Scan*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT.ActiveDirectory.DS-LDS.Tools*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT.ServerManager.Tools*" | Remove-WindowsCapability -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "XPS.Viewer*" | Remove-WindowsCapability -Online" >NUL 2>&1
+
 ECHO :::::::: Windows Features
-DISM /online /Disable-Feature /FeatureName:"DirectPlay" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"Microsoft-Windows-Subsystem-Linux" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"MicrosoftWindowsPowerShellV2" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"MicrosoftWindowsPowerShellV2Root" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"MSRDC-Infrastructure" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"Printing-Foundation-Features" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"Printing-Foundation-InternetPrinting-Client" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"Printing-Foundation-LPDPrintService" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"Printing-Foundation-LPRPortMonitor" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"Printing-XPSServices-Features" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"SMB1Protocol" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"SMB1Protocol-Client" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"SMB1Protocol-Deprecation" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"SMB1Protocol-Server" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"WCF-TCP-PortSharing45" >NUL 2>&1
-DISM /online /Disable-Feature /FeatureName:"WorkFolders-Client" >NUL 2>&1
+::PowerShell -Command "Get-WindowsOptionalFeature -Online | select featurename"
+:: Disable-WindowsOptionalFeature -Remove -Online = Removes Payload from Disk
+::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SearchEngine-Client-Package" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MediaPlayback*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "*Hyper-V*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Internet-Explorer*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Client-ProjFS" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "DirectPlay*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "FaxServicesClientPackage" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "HypervisorPlatform" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "IIS*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "LegacyComponents*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MSMQ*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MSRDC*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx3*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx4-AdvSrvs" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx4Extended-ASPNET45" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Printing-Foundation*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Printing-XPSServices*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "ScanManagementConsole" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SimpleTCP" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TelnetClient" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TFTP" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TIFFIFilter" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WAS*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WCF*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Windows-Identity-Foundation" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WorkFolders-Client" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "XPS-Foundation-XPS-Viewer" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
 
 ECHO :::::::: Windows UWP Applications
 PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.3DBuilder* | Remove-AppxPackage -AllUsers" >NUL 2>&1
