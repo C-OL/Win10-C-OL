@@ -104,25 +104,36 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Exte
 :: Classic Paint
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Paint\Settings" /V "DisableModernPaintBootstrap" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Microsoft Edge and Internet Explorer
-:: New Edge Uninstall
-if %OS%==x86 (set "PF=%PROGRAMFILES%\Microsoft") else if %OS%==AMD64 (set "PF=%PROGRAMFILES(X86)%\Microsoft")
-FOR /D %%i IN ("%PF%\Microsoft\Edge\Application\*") DO IF EXIST "%%i\Installer\Setup.exe" (%%i\Installer\Setup.exe --uninstall --force-uninstall --system-level --verbose-logging --delete-profile) >NUL 2>&1
+REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\EdgeUpdate" /V "DoNotUpdateToEdgeWithChromium" /T REG_DWORD /D "1" /F >NUL 2>&1
 IF EXIST "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" (TAKEOWN /F "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" && ICACLS "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe") >NUL 2>&1
-IF EXIST "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" (TAKEOWN /F "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" && ICACLS "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" /GRANT Administrators:F && RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe") >NUL 2>&1
+IF EXIST "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe") >NUL 2>&1
 IF EXIST "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" (TAKEOWN /F "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" && ICACLS "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" /GRANT Administrators:F && RD /S /Q "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe") >NUL 2>&1
+:: New Edge Uninstall
+TASKLIST | FIND /I "MSEdge.exe" >NUL 2>&1 && TASKKILL /F /IM MSEdge.exe >NUL 2>&1
+TASKLIST | FIND /I "MicrosoftEdgeUpdate.exe" >NUL 2>&1 && TASKKILL /F /IM MicrosoftEdgeUpdate.exe >NUL 2>&1
+if %OS%==x86 (set PF=%PROGRAMFILES%) else if %OS%==AMD64 (set "PF=%PROGRAMFILES(X86)%")
+FOR /D %%G IN ("%PF%\Microsoft\Edge\Application\*") DO (IF EXIST "%%G\Installer\Setup.exe" (start "Edge Uninstall" /W "%%G\Installer\setup.exe" --uninstall --system-level --verbose-logging --force-uninstall))
+TIMEOUT /T 3 >NUL 2>&1
+IF EXIST "%PF%\Microsoft\EdgeUpdate" RD /S /Q "%PF%\Microsoft\EdgeUpdate"
+IF EXIST "%PF%\Microsoft\Edge" RD /S /Q "%PF%\Microsoft\Edge"
 IF EXIST "%APPDATA%\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk" >NUL 2>&1
 IF EXIST "%LOCALAPPDATA%\Microsoft\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Edge" >NUL 2>&1
 IF EXIST "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" >NUL 2>&1
 IF EXIST "%PROGRAMDATA%\Microsoft\EdgeUpdate" RD /S /Q "%PROGRAMDATA%\Microsoft\EdgeUpdate" >NUL 2>&1
 IF EXIST "%USERPROFILE%\Desktop\Microsoft Edge.lnk" DEL /F /S /Q "%USERPROFILE%\Desktop\Microsoft Edge.lnk" >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\Microsoft\WindowsApps\MicrosoftEdge.exe" DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\WindowsApps\MicrosoftEdge.exe" >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\Microsoft\WindowsApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" RD /S /Q "%LOCALAPPDATA%\Microsoft\WindowsApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" >NUL 2>&1
 DEL /F /S /Q "%SYSTEMROOT%\System32\Config\SystemProfile\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge*.lnk" >NUL 2>&1
+::REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Edge" /V "TaskbarAutoPin" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MicrosoftEdge.exe" /V "Debugger" /T REG_SZ /D "%SYSTEMROOT%\System32\taskkill.exe" /F >NUL 2>&1
+REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Edge" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Active Setup\Installed Components\{9459C573-B17A-45AE-9F64-1857B5D58CEE}" /F >NUL 2>&1
+REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Edge" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Edge" /F >NUL 2>&1
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\EdgeUpdate" /F >NUL 2>&1
-REG Delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
-REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /V "NoRemove" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\EdgeUpdate" /V "DoNotUpdateToEdgeWithChromium" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MicrosoftEdge.exe" /V "Debugger" /T REG_SZ /D "%SYSTEMROOT%\System32\taskkill.exe" /F >NUL 2>&1
 REG Delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msedge.exe" /F >NUL 2>&1
 :: IE Harden
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad" /V "WpadOverride" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -157,7 +168,7 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer" /V "Integrated
 ::REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Addons" /V "FlashPlayerEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Microsoft OneDrive
 TASKLIST | FIND /I "OneDrive.exe" >NUL 2>&1 && TASKKILL /F /IM OneDrive.exe >NUL 2>&1
-if %OS%==x86 (set "OD=%SYSTEMROOT%\SYSTEM32") else if %OS%==AMD64 (set "OD=%SYSTEMROOT%\SysWOW64")
+if %OS%==x86 (set OD=%SYSTEMROOT%\SYSTEM32) else if %OS%==AMD64 (set OD=%SYSTEMROOT%\SysWOW64)
 IF EXIST %OD%\OneDriveSetup.exe (TAKEOWN /F %OD%\OneDrive* && ICACLS %OD%\OneDrive* /GRANT Administrators:F && %OD%\OneDriveSetup.exe /uninstall && DEL /F /S /Q %OD%\OneDrive*) >NUL 2>&1
 IF EXIST "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" >NUL 2>&1
 IF EXIST "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" >NUL 2>&1
@@ -704,12 +715,8 @@ REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\InputPersonalization\TrainedDataSt
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Input\TIPC" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Personalization\Settings" /V "AcceptedPrivacyPolicy" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Personalization\Settings" /V "RestrictImplicitInkCollection" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Personalization\Settings" /V "RestrictImplicitInkCollection" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Personalization\Settings" /V "RestrictImplicitTextCollection" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Personalization\Settings" /V "RestrictImplicitTextCollection" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports" /V "PreventHandwritingErrorReports" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports" /V "PreventHandwritingErrorReports" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TabletPC" /V "PreventHandwritingDataSharing" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TabletPC" /V "PreventHandwritingDataSharing" /T REG_DWORD /D "1" /F >NUL 2>&1
 :::: Diagnostics ^& Feedback
 ::REG Add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Diagnostics\Performance" /V "DisableDiagnosticTracing" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -782,7 +789,6 @@ REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSenso
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" /V "DisableLocationScripting" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" /V "DisableSensors" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" /V "DisableWindowsLocationProvider" /T REG_DWORD /D "0" /F >NUL 2>&1
-:: Geolocation
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration" /V "Status" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\activity" /V "Value" /T reg_SZ /D "Allow" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics" /V "Value" /T reg_SZ /D "Deny" /F >NUL 2>&1
@@ -1013,8 +1019,8 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Mem
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "FeaturesettingsOverrideMask" /T REG_DWORD /D "3" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "LargeSystemCache" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "SwapfileControl" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /V "DisableExceptionChainValidation" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /V "RestrictAnonymousSAM" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" /V "DisableExceptionChainValidation" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel" /V "RestrictAnonymousSAM" /T REG_DWORD /D "1" /F >NUL 2>&1
 :::: OOBE
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement" /V "ScoobeSystemSettingEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\OOBE" /V "DisablePrivacyExperience" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1234,7 +1240,7 @@ REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Ad
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "ShowTypeOverlay" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "SnapAssist" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "SnapFill" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "Start_NotIFyNewApps" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "Start_NotifyNewApps" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "Start_SearchFiles" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "Start_TrackDocs" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "Start_TrackProgs" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1248,7 +1254,7 @@ REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Ad
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "WebView" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "WebViewBarricade" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoComplete" /V "Append Completion" /T REG_SZ /D "No" /F >NUL 2>&1
-REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoComplete" /V "AutoSuggest" /T reg_SZ /D "No" /F >NUL 2>&1
+REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoComplete" /V "AutoSuggest" /T REG_SZ /D "No" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CabinetState" /V "FullPath" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" /V "StartupPage" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Ribbon" /V "MinimizedStateTabletModeOff" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1508,12 +1514,12 @@ REG Delete "HKEY_CLASSES_ROOT\.rtf\ShellNew" /F >NUL 2>&1
 REG Add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "MultipleInvokePromptMinimum" /T REG_DWORD /D "200" /F >NUL 2>&1
 :: Pin to Quick Access
 REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\Shell\PinToHome" /F >NUL 2>&1
-:: Restore Previous Versions (File History Properties Tab)
+:: Previous Versions (File History Properties Tab)
 REG Delete "HKEY_CLASSES_ROOT\AllFilesystemObjects\ShellEx\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
 REG Delete "HKEY_CLASSES_ROOT\CLSID\{450D8FBA-AD25-11D0-98A8-0800361B1103}\ShellEx\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
 REG Delete "HKEY_CLASSES_ROOT\Directory\ShellEx\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
 REG Delete "HKEY_CLASSES_ROOT\Drive\ShellEx\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
-:: Restore Previous Versions (File History Context Menu)
+:: Previous Versions (File History Context Menu)
 REG Delete "HKEY_CLASSES_ROOT\AllFilesystemObjects\ShellEx\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
 REG Delete "HKEY_CLASSES_ROOT\CLSID\{450D8FBA-AD25-11D0-98A8-0800361B1103}\ShellEx\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
 REG Delete "HKEY_CLASSES_ROOT\Directory\ShellEx\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /F >NUL 2>&1
@@ -1767,7 +1773,6 @@ SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SystemRestore\SR" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\TPM\Tpm-HASCertRetr" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\TPM\Tpm-Maintenance" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Task Manager\Interactive" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\TextServicesFramework\MsCtfMonitor" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Battery Saver Deferred Install" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Maintenance Install" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Policy Install" >NUL 2>&1
@@ -1838,6 +1843,8 @@ REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\diagnosticshub.sta
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DiagTrack" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DmWapPushService" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DoSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EdgeUpdate" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
+REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EdgeUpdateM" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EntAppSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\FDResPub" /V "Start" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG Add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\HelloFace\FODCleanupTask" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
@@ -1963,38 +1970,38 @@ PowerShell -Command "Get-WindowsCapability -Online -Name "XPS.Viewer*" | Remove-
 ECHO :::::::: Windows Features
 ::PowerShell -Command "Get-WindowsOptionalFeature -Online | select featurename"
 :: Disable-WindowsOptionalFeature -Remove -Online = Removes Payload from Disk
-::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SearchEngine-Client-Package" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MediaPlayback*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "*Hyper-V*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Internet-Explorer*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Client-ProjFS" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "DirectPlay*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "FaxServicesClientPackage" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "HypervisorPlatform" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "IIS*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "LegacyComponents*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MSMQ*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MSRDC*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx3*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx4-AdvSrvs" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx4Extended-ASPNET45" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Printing-Foundation*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Printing-XPSServices*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "ScanManagementConsole" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SimpleTCP" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TelnetClient" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TFTP" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TIFFIFilter" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WAS*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WCF*" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Windows-Identity-Foundation" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WorkFolders-Client" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "XPS-Foundation-XPS-Viewer" | Disable-WindowsOptionalFeature -Online" >NUL 2>&1
+::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SearchEngine-Client-Package" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MediaPlayback*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "*Hyper-V*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Internet-Explorer*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Client-ProjFS" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "DirectPlay*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "FaxServicesClientPackage" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "HypervisorPlatform" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "IIS*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "LegacyComponents*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MSMQ*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MSRDC*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx3*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx4-AdvSrvs" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx4Extended-ASPNET45" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Printing-Foundation*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Printing-XPSServices*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "ScanManagementConsole" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SimpleTCP" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TelnetClient" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TFTP" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TIFFIFilter" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WAS*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WCF*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Windows-Identity-Foundation" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WorkFolders-Client" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "XPS-Foundation-XPS-Viewer" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
 
 ECHO :::::::: Windows UWP Applications
 PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.3DBuilder* | Remove-AppxPackage -AllUsers" >NUL 2>&1
