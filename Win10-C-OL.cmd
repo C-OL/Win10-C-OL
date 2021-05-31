@@ -1,3 +1,4 @@
+::
 :: Windows 10 C-OL - Custom Tweaks Collection Script
 ::
 :: This is a collection of tweaks that aim to fine tune a fresh install of Windows 10 keeping
@@ -22,7 +23,7 @@ set OS=%PROCESSOR_ARCHITECTURE%
 if /i %PROCESSOR_ARCHITECTURE%==x86 (if not defined PROCESSOR_ARCHITEW6432 (set "OS=x86"))
 
 
-ECHO :::::::: *Lower UAC Level*
+ECHO :::::::: * UAC Level *
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /V "ConsentPromptBehaviorAdmin" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /V "ConsentPromptBehaviorUser" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /V "EnableInstallerDetection" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -40,7 +41,7 @@ NET USER DefaultUser0 /DELETE >NUL 2>&1
 :: Password Expiration
 NET ACCOUNTS /MaxPwAge:Unlimited >NUL 2>&1
 :: Set User TEMP to Windows TEMP
-IF EXIST "%LOCALAPPDATA%\TEMP" RD /S /Q "%LOCALAPPDATA%\TEMP" >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\TEMP" RD /S /Q "%LOCALAPPDATA%\TEMP" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Environment" /V "TEMP" /T REG_SZ /D "%SYSTEMROOT%\TEMP" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Environment" /V "TMP" /T REG_SZ /D "%SYSTEMROOT%\TEMP" /F >NUL 2>&1
 :: Microsoft.com accounts (Block Sign-in Microsoft account)
@@ -53,6 +54,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "NoLo
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\SettingSync" /V "DisableSettingSync" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync" /V "SyncPolicy" /T REG_DWORD /D "5" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Accessibility" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\AppSync" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\BrowserSettings" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Credentials" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Language" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -105,7 +107,7 @@ REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppC
 REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\TelemetryController" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\NoExecuteState" /V "LastNoExecuteRadioButtonState" /T REG_DWORD /D "14013" /F >NUL 2>&1
 :: Compatibility Troubleshoot
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /V "{1d27f844-3a1f-4410-85ac-14651078412d}" /T REG_SZ /D "" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /V "{1d27f844-3a1f-4410-85ac-14651078412d}" /T REG_SZ /D "" /F >NUL 2>&1
 :: Classic Paint
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Paint\Settings" /V "DisableModernPaintBootstrap" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Microsoft Edge and Internet Explorer
@@ -117,23 +119,23 @@ IF EXIST "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" (TAKEOW
 IF EXIST "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe") >NUL 2>&1
 IF EXIST "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" (TAKEOWN /F "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" && ICACLS "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" /GRANT Administrators:F /T /Q && RD /S /Q "%LOCALAPPDATA%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe") >NUL 2>&1
 :: New Edge Uninstall
-TASKLIST | FIND /I "MSEdge.exe" >NUL 2>&1 && TASKKILL /F /IM MSEdge.exe >NUL 2>&1
-TASKLIST | FIND /I "MicrosoftEdgeUpdate.exe" >NUL 2>&1 && TASKKILL /F /IM MicrosoftEdgeUpdate.exe >NUL 2>&1
+TASKLIST | FIND /I "MSEdge.exe" /F >NUL 2>&1 && TASKKILL /F /IM MSEdge.exe >NUL 2>&1
+TASKLIST | FIND /I "MicrosoftEdgeUpdate.exe" /F >NUL 2>&1 && TASKKILL /F /IM MicrosoftEdgeUpdate.exe >NUL 2>&1
 if %OS%==x86 (set PF=%PROGRAMFILES%) else if %OS%==AMD64 (set "PF=%PROGRAMFILES(X86)%")
 FOR /D %%G IN ("%PF%\Microsoft\Edge\Application\*") DO (IF EXIST "%%G\Installer\Setup.exe" (start "Edge Uninstall" /W "%%G\Installer\setup.exe" --uninstall --system-level --verbose-logging --force-uninstall))
 TIMEOUT /T 2 >NUL 2>&1
 IF EXIST "%PF%\Microsoft\EdgeUpdate" RD /S /Q "%PF%\Microsoft\EdgeUpdate"
 IF EXIST "%PF%\Microsoft\Edge" RD /S /Q "%PF%\Microsoft\Edge"
-IF EXIST "%APPDATA%\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk" >NUL 2>&1
-IF EXIST "%LOCALAPPDATA%\Microsoft\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Edge" >NUL 2>&1
-IF EXIST "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" >NUL 2>&1
-IF EXIST "%PROGRAMDATA%\Microsoft\EdgeUpdate" RD /S /Q "%PROGRAMDATA%\Microsoft\EdgeUpdate" >NUL 2>&1
-IF EXIST "%USERPROFILE%\Desktop\Microsoft Edge.lnk" DEL /F /S /Q "%USERPROFILE%\Desktop\Microsoft Edge.lnk" >NUL 2>&1
-IF EXIST "%LOCALAPPDATA%\Microsoft\WindowsApps\MicrosoftEdge.exe" DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\WindowsApps\MicrosoftEdge.exe" >NUL 2>&1
-IF EXIST "%LOCALAPPDATA%\Microsoft\WindowsApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" RD /S /Q "%LOCALAPPDATA%\Microsoft\WindowsApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" >NUL 2>&1
-DEL /F /S /Q "%SYSTEMROOT%\System32\Config\SystemProfile\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge*.lnk" >NUL 2>&1
+IF EXIST "%APPDATA%\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge.lnk" /F >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\Microsoft\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Edge" /F >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" RD /S /Q "%LOCALAPPDATA%\Microsoft\Windows\Safety\Edge" /F >NUL 2>&1
+IF EXIST "%PROGRAMDATA%\Microsoft\EdgeUpdate" RD /S /Q "%PROGRAMDATA%\Microsoft\EdgeUpdate" /F >NUL 2>&1
+IF EXIST "%USERPROFILE%\Desktop\Microsoft Edge.lnk" DEL /F /S /Q "%USERPROFILE%\Desktop\Microsoft Edge.lnk" /F >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\Microsoft\WindowsApps\MicrosoftEdge.exe" DEL /F /S /Q "%LOCALAPPDATA%\Microsoft\WindowsApps\MicrosoftEdge.exe" /F >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\Microsoft\WindowsApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" RD /S /Q "%LOCALAPPDATA%\Microsoft\WindowsApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" /F >NUL 2>&1
+DEL /F /S /Q "%SYSTEMROOT%\System32\Config\SystemProfile\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\Microsoft Edge*.lnk" /F >NUL 2>&1
 ::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Edge" /V "TaskbarAutoPin" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MicrosoftEdge.exe" /V "Debugger" /T REG_SZ /D "%SYSTEMROOT%\System32\taskkill.exe" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\MicrosoftEdge.exe" /V "Debugger" /T REG_SZ /D "%SYSTEMROOT%\System32\taskkill.exe" /F >NUL 2>&1
 REG DELETE "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Edge" /F >NUL 2>&1
 REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Active Setup\Installed Components\{9459C573-B17A-45AE-9F64-1857B5D58CEE}" /F >NUL 2>&1
 REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Edge" /F >NUL 2>&1
@@ -143,6 +145,9 @@ REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Imag
 :: IE Harden
 REG ADD "HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\PhishingFilter" /V "EnabledV9" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\PhishingFilter"  /V " EnabledV9" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Main" /V "Default_Page_URL" /T REG_SZ /D "about:blank" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Main" /V "NoProtectedModeBanner" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Main" /V "Start Page" /T REG_SZ /D "about:blank" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\PhishingFilter" /V "EnabledV8" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\PhishingFilter" /V "EnabledV9" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad" /V "WpadOverride" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -172,31 +177,24 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Active Setup\Installe
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap" /V "IEHarden" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG DELETE "HKEY_CURRENT_USER\SOFTWARE\Classes\Local Settings\SOFTWARE\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedgedevtoolsclient_8wekyb3d8bbwe" /F >NUL 2>&1
 REG DELETE "HKEY_CURRENT_USER\SOFTWARE\Classes\Local Settings\SOFTWARE\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe" /F >NUL 2>&1
+REG DELETE "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Main" /V "First Home Page" /F >NUL 2>&1
 :: CheckExeSignatures
 ::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Download" /V "CheckExeSignatures" /T REG_SZ /D "No" /F >NUL 2>&1
 ::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Download" /V "RunInvalidSignatures" /T REG_DWORD /D "0" /F >NUL 2>&1
-:: Flash Player (Not needed after KB4577586)
-::IF EXIST "%APPDATA%\Adobe\Flash Player" (TAKEOWN /F "%APPDATA%\Adobe\Flash Player" & ICACLS "%APPDATA%\Adobe\Flash Player" /GRANT Administrators:F & RD /S /Q "%APPDATA%\Adobe\Flash Player") >NUL 2>&1
-::IF EXIST "%APPDATA%\Macromedia\Flash Player" (TAKEOWN /F "%APPDATA%\Macromedia\Flash Player" & ICACLS "%APPDATA%\Macromedia\Flash Player" /GRANT Administrators:F & RD /S /Q "%APPDATA%\Macromedia\Flash Player") >NUL 2>&1
-::IF EXIST "%SYSTEMROOT%\SysWOW64\Macromed\Flash" (TAKEOWN /F "%SYSTEMROOT%\SysWOW64\Macromed\Flash" & ICACLS "%SYSTEMROOT%\SysWOW64\Macromed\Flash" /GRANT Administrators:F & RD /S /Q "%SYSTEMROOT%\SysWOW64\Macromed\Flash") >NUL 2>&1
-::IF EXIST "%SYSTEMROOT%\System32\Macromed\Flash" (TAKEOWN /F "%SYSTEMROOT%\System32\Macromed\Flash" & ICACLS "%SYSTEMROOT%\System32\Macromed\Flash" /GRANT Administrators:F & RD /S /Q "%SYSTEMROOT%\System32\Macromed\Flash") >NUL 2>&1
-::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\MicrosoftEdge\ADDons" /V "FlashPlayerEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
-::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer" /V "DisableFlashInIE" /T REG_DWORD /D "1" /F >NUL 2>&1
-::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\ADDons" /V "FlashPlayerEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Microsoft OneDrive
-TASKLIST | FIND /I "OneDrive.exe" >NUL 2>&1 && TASKKILL /F /IM OneDrive.exe >NUL 2>&1
+TASKLIST | FIND /I "OneDrive.exe" /F >NUL 2>&1 && TASKKILL /F /IM OneDrive.exe >NUL 2>&1
 if %OS%==x86 (set OD=%SYSTEMROOT%\SYSTEM32) else if %OS%==AMD64 (set OD=%SYSTEMROOT%\SysWOW64)
 IF EXIST %OD%\OneDriveSetup.exe (TAKEOWN /F %OD%\OneDrive* && ICACLS %OD%\OneDrive* /GRANT Administrators:F /T /Q && %OD%\OneDriveSetup.exe /uninstall) >NUL 2>&1
 TIMEOUT /T 2 >NUL 2>&1
 DEL /F /S /Q %OD%\OneDrive* >NUL 2>&1
-IF EXIST "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" >NUL 2>&1
-IF EXIST "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" >NUL 2>&1
-IF EXIST "%LOCALAPPDATA%\Microsoft\OneDrive" RD /S /Q "%LOCALAPPDATA%\Microsoft\OneDrive" >NUL 2>&1
-IF EXIST "%PROGRAMDATA%\Microsoft OneDrive" RD /S /Q "%PROGRAMDATA%\Microsoft OneDrive" >NUL 2>&1
-IF EXIST "%SYSTEMDRIVE%\OneDriveTemp" RD /S /Q "%SYSTEMDRIVE%\OneDriveTemp" >NUL 2>&1
-IF EXIST "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" DEL /F /S /Q "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" >NUL 2>&1
-IF EXIST "%USERPROFILE%\Links\OneDrive.lnk" DEL /F /S /Q "%USERPROFILE%\Links\OneDrive.lnk" >NUL 2>&1
-IF EXIST "%USERPROFILE%\OneDrive" RD /S /Q "%USERPROFILE%\OneDrive" >NUL 2>&1
+IF EXIST "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Microsoft OneDrive.lnk" /F >NUL 2>&1
+IF EXIST "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" /F >NUL 2>&1
+IF EXIST "%LOCALAPPDATA%\Microsoft\OneDrive" RD /S /Q "%LOCALAPPDATA%\Microsoft\OneDrive" /F >NUL 2>&1
+IF EXIST "%PROGRAMDATA%\Microsoft OneDrive" RD /S /Q "%PROGRAMDATA%\Microsoft OneDrive" /F >NUL 2>&1
+IF EXIST "%SYSTEMDRIVE%\OneDriveTemp" RD /S /Q "%SYSTEMDRIVE%\OneDriveTemp" /F >NUL 2>&1
+IF EXIST "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" DEL /F /S /Q "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk" /F >NUL 2>&1
+IF EXIST "%USERPROFILE%\Links\OneDrive.lnk" DEL /F /S /Q "%USERPROFILE%\Links\OneDrive.lnk" /F >NUL 2>&1
+IF EXIST "%USERPROFILE%\OneDrive" RD /S /Q "%USERPROFILE%\OneDrive" /F >NUL 2>&1
 REG DELETE "HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
 REG DELETE "HKEY_CLASSES_ROOT\WoW6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F >NUL 2>&1
 REG DELETE "HKEY_CURRENT_USER\Environment" /V "OneDrive" /F >NUL 2>&1
@@ -261,13 +259,13 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsMediaPlayer" /V "
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WMDRM" /V "DisableOnline" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: AppX
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Appx" /V "AllowDevelopmentWithoutDevLicense" /T REG_DWORD /D "1" /F >NUL 2>&1
-::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "AicEnabled " /T REG_SZ /D "PreferStore" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "AicEnabled" /T REG_SZ /D "PreferStore" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\FVE" /V "UseAdvancedStartup" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\FVE" /V "UseTPMKeyPIN" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\FVE" /V "UseTPMPIN" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\FVE" /V "UseTPMKeyPIN" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\FVE" /V "UseTPMPIN" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Appx" /V "AllowAllTrustedApps" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Appx" /V "AllowDeploymentInSpecialProfiles" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Appx" /V "BlockNonAdminUserInstall" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Appx" /V "BlockNonAdminUserInstall" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Appx" /V "RestrictAppDataToSystemVolume" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Appx" /V "RestrictAppToSystemVolume" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\AppModel\StateManager" /V "AllowSharedLocalAppData" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -278,7 +276,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUn
 ECHO :::::::: Devices
 :::: Mouse
 REG ADD "HKEY_CURRENT_USER\Control Panel\Mouse" /V "ActiveWindowTracking" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_CURRENT_USER\Control Panel\Mouse" /V "Beep" /T REG_SZ /D "no" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\Control Panel\Mouse" /V "Beep" /T REG_SZ /D "No" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Control Panel\Mouse" /V "ExtendedSounds" /T REG_SZ /D "No" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Control Panel\Mouse" /V "MouseHoverTime" /T REG_SZ /D "100" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Control Panel\Mouse" /V "MouseSensitivity" /T REG_SZ /D "20" /F >NUL 2>&1
@@ -421,7 +419,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameUX" /V "List
 REG ADD "HKEY_CURRENT_USER\SYSTEM\GameConfigStore" /V "GameDVR_Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" /V "AppCaptureEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" /V "HistoricalCaptureEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /V "AllowGameDVR" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /V "AllowGameDVR" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: SmartGlass
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SmartGlass" /V "BluetoothPolicy" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SmartGlass" /V "UserAuthPolicy" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -432,20 +430,27 @@ REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Holographic
 
 
 ECHO :::::::: Network ^& Internet
-:: Active Probing (pings to MSFT NCSI server)
+:: Active Probing
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NlaSvc\Parameters\Internet" /V "EnableActiveProbing" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkConnectivityStatusIndicator" /V "NoActiveProbe" /T REG_DWORD /D "1" /F >NUL 2>&1 
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkConnectivityStatusIndicator" /V "DisablePassivePolling" /T REG_DWORD /D "1" /F >NUL 2>&1 
 :: Admin Shares
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "RequireSecuritySignature" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "AutoShareServer" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "AutoShareWks" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "IRPStackSize" /T REG_DWORD /D "20" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "RestrictNullSessAccess" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "Size" /T REG_DWORD /D "3" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "SMB1" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "SMB2" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "SMB3" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "SMB2" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "SMB3" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters" /V "SMBDeviceEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Adobe Type Manager
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" /V "DisableATMFD" /T REG_DWORD /D "1" /F >NUL 2>&1
+:: BranchCache
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\HostedCache\Discovery" /V "SCPDiscoveryEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\CooperativeCaching" /V "Enable" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\Service" /V "Enable" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: BITS
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\BITS" /V "DisableBranchCache" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\BITS" /V "DisablePeerCachingClient" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -466,11 +471,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\A
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Associations\ModRiskFileTypes" /VE /T REG_SZ /D ".bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Associations\ModRiskFileTypes" /VE /T REG_SZ /D ".bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd" /F >NUL 2>&1
 REG ADD "HKEY_USERS\.Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Associations\ModRiskFileTypes" /VE /T REG_SZ /D ".bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd" /F >NUL 2>&1
-:: BranchCache
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\HostedCache\Discovery" /V "SCPDiscoveryEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\CooperativeCaching" /V "Enable" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\PeerDist\Service" /V "Enable" /T REG_DWORD /D "0" /F >NUL 2>&1
-:: CertIFicate Revocation Check
+:: Certificate Revocation Check
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Safer\CodeIdentifiers" /V "AuthenticodeEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: CredSSP Encryption
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /V "AllowEncryptionOracle" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -504,7 +505,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\IIS" /V "Prev
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\Main" /V "NoProtectedModeBanner" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main" /V "NoProtectedModeBanner" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Microsoft Peer-to-Peer Networking Services
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Peernet" /V "Disabled" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Peernet" /V "Disabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: NetBIOS over TCP/IP
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\services\NetBT\Parameters" /V "NetbiosOptions" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters" /V "NoNameReleaseOnDemand" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -513,8 +514,6 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSet
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Domain" /V "AutoSetup" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Private" /V "AutoSetup" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\NcdAutoSetup\Public" /V "AutoSetup" /T REG_DWORD /D "0" /F >NUL 2>&1
-:: Network Connectivity Status Indicator
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkConnectivityStatusIndicator" /V "NoActiveProbe" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Password Reveal
 ::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CredUI" /V "DisablePasswordReveal" /T REG_DWORD /D "1" /F
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Main" /V "DisablePasswordReveal" /T REG_DWORD /D "1" /F
@@ -535,7 +534,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "LsaCfgFlag
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "NoLMHash" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "RestrictAnonymous" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "RestrictAnonymousSAM" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "RestrictRemoteSAM" /T REG_SZ /D "O:BAG:BAD:(A;;RC;;;BA)" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "RestrictRemoteSAM" /T REG_SZ /D "O:BAG:BAD:(A;;RC;;;BA)" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "RunAsPPL" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "SCENoApplyLegacyAuditPolicy" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /V "SecureBoot" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -544,29 +543,23 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\FIPSAlgorithmPo
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "AllowNullSessionFallback" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "RestrictReceivingNTLMTraffic" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "RestrictSendingNTLMTraffic" /T REG_DWORD /D "2" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "NTLMMinClientSec" /T REG_DWORD /D "537395200" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "NTLMMinClientSec" /T REG_DWORD /D "537395200" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "NTLMMinClientSec" /T REG_DWORD /D "536870912" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0" /V "NTLMMinServerSec" /T REG_DWORD /D "536870912" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\PKU2U" /V "AllowOnlineID" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" /V "UseLogonCredential" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManWorkstation\Parameters" /V "DisableBandwidthThrottling" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManWorkstation\Parameters" /V "EnableSecuritySignature" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManWorkstation\Parameters" /V "RequireSecuritySignature" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManWorkstation\Parameters" /V "EnablePlainTextPassword" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /V "RequireSecuritySignature" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Kerberos
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters" /V "SupportedEncryptionTypes" /T REG_DWORD /D "2147483640" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters" /V "DevicePKInitEnabled" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: LDAP
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NTDS\Parameters" /V "LdapEnforceChannelBinding" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NTDS\Parameters" /V "LdapEnforceChannelBinding" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LDAP" /V "LDAPClientIntegrity" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: RPC Unauthenticated Connections
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\RPC" /V "RestrictRemoteClients" /T REG_DWORD /D "1" /F >NUL 2>&1
-:: Router Discovery
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\QoS" /V "Do not use NLA" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "DnsPriority" /T REG_DWORD /D "6" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "HostsPriority" /T REG_DWORD /D "5" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "LocalPriority" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "NetbtPriority" /T REG_DWORD /D "7" /F >NUL 2>&1
+:: MMThrottling
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /V "NetworkThrottlingIndex" /T REG_DWORD /D "70" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /V "SystemResponsiveness" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Limit Reservable Bandwidth 
@@ -620,6 +613,11 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" 
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "TCPWindowSize" /T REG_DWORD /D "2238" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "UseDomainNameDevolution" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters" /V "UseZeroBroadCast" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\QoS" /V "Do not use NLA" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "DnsPriority" /T REG_DWORD /D "6" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "HostsPriority" /T REG_DWORD /D "5" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "LocalPriority" /T REG_DWORD /D "4" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP\ServiceProvider" /V "NetbtPriority" /T REG_DWORD /D "7" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "BSDUrgent" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "DeadGWDetect" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters" /V "DeadGWDetectDefault" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -672,7 +670,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RasMan\Parameters"
 :: WaitNetworkStartup
 REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon\SyncForegroundPolicy" /F >NUL 2>&1
 :: WiFi Sense and Hot Spot
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\WiFi\AllowAutoConnectToWiFiSenseHotspots" /V "value" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\WiFi\AllowAutoConnectToWiFiSenseHotspots" /V "Value" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\WiFi\AllowWiFiHotSpotReporting" /V "value" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager" /V "WiFiSenseCredShared" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager" /V "WiFiSenseOpen" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -683,9 +681,6 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Config"
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Config" /V "WiFiSharingOutlookInitial" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Config" /V "WiFiSharingSkypeInitial" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\crowdsrcplugin" /V "EnableWiFiCrowdsourcing" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Features\S-1-5-21-3752830748-2673197281-2103194476-1000\SocialNetworks\ABCH" /V "OptInStatus" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Features\S-1-5-21-3752830748-2673197281-2103194476-1000\SocialNetworks\ABCH-SKYPE" /V "OptInStatus" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Features\S-1-5-21-3752830748-2673197281-2103194476-1000\SocialNetworks\FACEBOOK" /V "OptInStatus" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy" /V "fMinimizeConnections" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Windows Connect Now
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars" /V "DisableFlashConfigRegistrar" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -701,10 +696,13 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Mail" /V "Manual
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths" /V "\\*\NETLOGON" /T REG_SZ /D "RequireMutualAuthentication=1, RequireIntegrity=1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths" /V "\\*\SYSVOL" /T REG_SZ /D "RequireMutualAuthentication=1, RequireIntegrity=1" /F >NUL 2>&1
 :: ECCCurves
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002" /V "EccCurves" /T REG_MULTI_SZ /D "NistP384 NistP256" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002" /V "EccCurves" /T REG_MULTI_SZ /D "NistP384 NistP256" /F >NUL 2>&1
 :: WBEM
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WBEM\CIMOM" /V "EnableEvents" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WBEM\CIMOM" /V "Logging" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WBEM\CIMOM" /V "EnableEvents" /T REG_SZ /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WBEM\CIMOM" /V "Logging" /T REG_SZ /D "0" /F >NUL 2>&1
+:: SCHANNEL
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client" /V "DisabledByDefault" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client" /V "Enabled" /T REG_DWORD /D "1" /F >NUL 2>&1
 
 
 ECHO :::::::: Personalization
@@ -768,8 +766,8 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Biometrics\Credential Pr
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Biometrics\Credential Provider" /V "SwitchTimeoutInSeconds" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Biometrics\FacialFeatures" /V "EnhancedAntiSpoofing" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Logon Screen On Resume
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /V "ScreenSaverIsSecure" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System\Power" /V "PromptPasswordOnResume" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /V "ScreenSaverIsSecure" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System\Power" /V "PromptPasswordOnResume" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Welcome Screen
 ::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoWelcomeScreen" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoWelcomeScreen" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -796,15 +794,15 @@ ECHO :::::::: Privacy
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo" /V "DisabledByGroupPolicy" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Current\Device\Bluetooth" /V "AllowAdvertising" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Current\Device\Browser" /V "AllowADDressBarDropdown" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Current\Device\Browser" /V "AllowAddressBarDropdown" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Let Websites Provide Locally Relevant Content By Accessing My Language List
 REG ADD "HKEY_USERS\.Default\Control Panel\International\User Profile" /V "HttpAcceptLanguageOptOut" /T REG_DWORD /D "1" /F >NUL 2>&1
 :::: Speech
 :::: Inking ^& Typing Personalization
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\TextInput" /V "AllowLinguisticDataCollection" /T REG_DWORD /D "0" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\InputPersonalization" /V "AllowInputPersonalization" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\InputPersonalization" /V "RestrictImplicitInkCollection" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\InputPersonalization" /V "RestrictImplicitTextCollection" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\InputPersonalization" /V "RestrictImplicitInkCollection" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\InputPersonalization" /V "RestrictImplicitTextCollection" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\InputPersonalization\TrainedDataStore" /V "HarvestContacts" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Input\TIPC" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Personalization\Settings" /V "AcceptedPrivacyPolicy" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -819,9 +817,9 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\TabletPC" /V "Pr
 ::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Diagnostics\Performance\ShutdownCKCLSettings" /V Start /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\ScheduledDiagnostics" /V "EnabledExecution" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\EventLog\ProtectedEventLogging" /V "EnableProtectedEventLogging" /T REG_DWORD /D "2" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnostics" /V "EnableDiagnostics" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnostics" /V "EnableDiagnostics" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnostics" /V "ValidateTrust" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy" /V "DisableQueryRemoteServer" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\ScriptedDiagnosticsProvider\Policy" /V "DisableQueryRemoteServer" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{C295FBBA-FD47-46AC-8BEE-B1715EC634E5}" /V "DownloadToolsEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{C295FBBA-FD47-46AC-8BEE-B1715EC634E5}" /V "ScenarioExecutionEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{EB73B633-3F4E-4BA0-8F60-8F3C6F53168F}" /V "EnabledScenarioExecutionLevel" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -840,7 +838,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Assistance\Client\1.0" /
 :: F1 key - Help and Support
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\Win32" /VE /T REG_SZ /D "" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Classes\Typelib\{8cec5860-07a1-11d9-b15e-000d56bfe6ee}\1.0\0\Win64" /VE /T REG_SZ /D "" /F >NUL 2>&1
-TASKLIST | FIND /I "HelpPane.exe" >NUL 2>&1 && TASKKILL /F /IM HelpPane.exe >NUL 2>&1
+TASKLIST | FIND /I "HelpPane.exe" /F >NUL 2>&1 && TASKKILL /F /IM HelpPane.exe >NUL 2>&1
 IF EXIST %SYSTEMROOT%\HelpPane.exe (TAKEOWN /F %SYSTEMROOT%\HelpPane.exe && ICACLS %SYSTEMROOT%\HelpPane.exe /INHERITANCE:R /REMOVE Administrators) >NUL 2>&1
 :: Telemetry
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /V "AllowTelemetry" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -903,7 +901,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Capability
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\Email" /V "Value" /T REG_SZ /D "Deny" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\GazeInput" /V "Value" /T REG_SZ /D "Allow" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\HumanInterfaceDevice" /V "Value" /T REG_SZ /D "Allow" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\Location" /V "Value" /T REG_SZ /D "Allow" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\Location" /V "Value" /T REG_SZ /D "Deny" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\Microphone" /V "Value" /T REG_SZ /D "Allow" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\PhoneCall" /V "Value" /T REG_SZ /D "Deny" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\PhoneCallHistory" /V "Value" /T REG_SZ /D "Deny" /F >NUL 2>&1
@@ -929,9 +927,7 @@ ECHO :::::::: System
 ::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" /V "NoToastApplicationNotificationOnLockScreen" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\System" /V "DisableLockScreenAppNotifications" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell" /V "UseActionCenterExperience" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" /V "NoTileApplicationNotification" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ActionCenter\Quick Actions\All\SystemSettings_Launcher_QuickNote" /V "Type" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Explorer" /V "DisableNotificationCenter" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "DisableNotificationCenter" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" /V "NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" /V "NOC_GLOBAL_SETTING_ALLOW_Notification_SOUND" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" /V "NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -956,7 +952,7 @@ POWERCFG /X -Monitor-TimeOut-AC 4 >NUL 2>&1
 POWERCFG /X -Monitor-TimeOut-DC 4 >NUL 2>&1
 POWERCFG /X -Standby-TimeOut-AC 0 >NUL 2>&1
 POWERCFG /X -Standby-TimeOut-DC 0 >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "HiberbootEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "HiberbootEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /V "HiberbootEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /V "HibernateEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /V "HibernateEnabledDefault" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -965,7 +961,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\F
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /V "ShowSleepOption" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /V "ShowLockOption" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: WinHTTP Registrations
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Classes\Localettings\SOFTWARE\Microsoft\Windows\CurrentVersion\AppContainer\Mappings" /V "CleanupLeakedContainerRegistrations" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Mappings" /V "CleanupLeakedContainerRegistrations" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp" /V "CleanupLeakedContainerRegistrations" /T REG_DWORD /D "1" /F >NUL 2>&1
 :::: Storage
 :: Storage Sense
@@ -995,14 +991,13 @@ REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\CDP\Setting
 :: Clipboard History
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Clipboard" /V "EnableClipboardHistory" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\System" /V "AllowClipboardHistory" /T REG_DWORD /D "0" /F >NUL 2>&1
-:: Sync Across Devices
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\System" /V "AllowCrossDeviceClipboard" /T REG_DWORD /D "0" /F >NUL 2>&1
 :::: Remote Desktop
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule" /V "DisableRPCoverTCP" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Conferencing" /V "CallSecurity" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Conferencing" /V "MaxFileSendSize" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Conferencing" /V "MaximumBandwidth" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Conferencing" /V "NoADDingDirectoryServers" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Conferencing" /V "NoAddingDirectoryServers" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Conferencing" /V "NoAdvancedCalling" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Conferencing" /V "NoAllowControl" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Conferencing" /V "NoAppSharing" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1065,7 +1060,9 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /V
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /V "StartRCM" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /V "TSUserEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /V "fDenyTSConnections" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /V "fSingleSessionPerUser" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-TCP" /V "UserAuthentication" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-TCP" /V "fDisableEncryption" /T REG_DWORD /D "0" /F >NUL 2>&1
 :::: Remote Assistance
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance" /V "AllowRemoteRPC" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance" /V "CreateEncryptedOnlyTickets" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1139,7 +1136,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl" /V "D
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl" /V "DumpLogLevel" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl" /V "EnableLogFile" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl" /V "LogEvent" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl" /V "MinidumpsCount" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl" /V "MinidumpsCount" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl" /V "Overwrite" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl" /V "SendAlert" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CrashControl\StorageTelemetry" /V "DeviceDumpEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1168,15 +1165,21 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Mem
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "FeaturesettingsOverride" /T REG_DWORD /D "72" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "FeaturesettingsOverrideMask" /T REG_DWORD /D "3" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "LargeSystemCache" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "SwapfileControl" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /V "SwapFileControl" /T REG_DWORD /D "0" /F >NUL 2>&1
 :::: OOBE
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\UserProfileEngagement" /V "ScoobeSystemSettingEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\OOBE" /V "DisablePrivacyExperience" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OOBE" /V "DisablePrivacyExperience" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /V "DisableVoice" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /V "HideEULAPage" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /V "HideLocalAccountScreen" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /V "HideOEMRegistrationScreen" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /V "HideOnlineAccountScreens" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /V "HideWirelessSetupInOOBE" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /V "SkipMachineOOBE" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /V "SkipUserOOBE" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /V "ProtectYourPC" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /V "UnattendEnableRetailDemo" /T REG_DWORD /D "0" /F >NUL 2>&1
 :::: Windows Explorer Clean and Speed UP
 :: Active Desktop (obsolete in Win10?)
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\ActiveDesktop" /V "NoADDingComponents" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1248,7 +1251,37 @@ REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeli
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SubscribedContent-88000165Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SubscribedContent-88000166Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SystemPaneSuggestionsEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\202914" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\202914" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\280815" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\280815" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\310091" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\310091" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\310093" /V "AllowPartialContentAvailability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\310093" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\310093" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\314559" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\314559" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\338387" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\338387" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\338388" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\338388" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\338389" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\338389" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\353694" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\353694" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\353698" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\353698" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\88000045" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\88000045" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\88000105" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\88000105" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\88000161" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\88000161" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\88000163" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\88000163" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\88000165" /V "Availability" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\Subscriptions\88000165" /V "HasContent" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SilentInstalledAppsEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SilentInstalledAppsEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG DELETE "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\SuggestedApps" /F >NUL 2>&1
@@ -1263,21 +1296,22 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Update" /V "UpdateM
 :: Automatically Hide Scroll Bars
 REG ADD "HKEY_CURRENT_USER\Control Panel\Accessibility" /V "DynamicScrollbars" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: PowerShell
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "DontUsePowerShellOnWinX" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "DontUsePowerShellOnWinX" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription" /V "EnableTranscripting" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription" /V "EnableTranscripting" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell" /V "EnableScripts" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /V "__PSLockDownPolicy" /T REG_SZ /D "4" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /V "__PSLockDownPolicy" /T REG_SZ /D "4" /F >NUL 2>&1
 :: Confirm DELETE Dialog Box
-::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "ConfirmFileDELETE" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "ConfirmFileDELETE" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "ConfirmFileDelete" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "ConfirmFileDelete" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Default Drag n Drop
 :: 0 or DELETE = Default action / 1 = Always copy / 2 = Always move / 4 = Always create shortcut
 ::REG ADD "HKEY_CLASSES_ROOT\AllFileSystemObjects" /V "DefaultDropEffect" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Desktop Gadgets
 REG DELETE "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell" /V "DisableCharmsHint" /F >NUL 2>&1
-REG DELETE "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell" /V "DisableTLcorner" /F >NUL 2>&1
+REG DELETE "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell" /V "DisableTLCorner" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell" /V "DisableCharmsHint" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell" /V "DisableTLcorner" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell" /V "DisableTLCorner" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Windows\Sidebar" /V "TurnOffSidebar" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Windows\Sidebar" /V "TurnOffUnsignedGadgets" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Windows\Sidebar" /V "TurnOffUserInstalledGadgets" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1349,11 +1383,11 @@ REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\WoW6432Node\Microsoft\Windows\CurrentVer
 ::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoAutoTrayNotIFy" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoChangeStartMenu" /T REG_DWORD /D "0" /F >NUL 2>&1
 ::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoInstrumentation" /T REG_DWORD /D "0" /F >NUL 2>&1
-::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoRecentDocsHistory" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoRecentDocsHistory" /T REG_DWORD /D "1" /F >NUL 2>&1
 ::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "NoStartMenuMFUprogramsList" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "PreXPSP2ShellProtocolBehavior" /T REG_DWORD /D "0" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "HideRecentlyADDedApps" /T REG_DWORD /D "1" /F >NUL 2>&1
-::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "NoNewAppAlert" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "NoNewAppAlert" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Classes\Local Settings\SOFTWARE\Microsoft\Windows\Shell\Bags\AllFolders\Shell" /V "FolderType" /T REG_SZ /D "NotSpecIFied" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "AlwaysShowMenus" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /V "AutoCheckSelect" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1420,7 +1454,7 @@ REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "Ena
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "ExplorerRibbonStartsMinimized" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "NoSearchInternetTryHarderButton" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "NoUseStoreOpenWith" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "ShowRunAsDIFferentUserInStart" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "ShowRunAsDifferentUserInStart" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "DisableIndexedLibraryExperience" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "DisableSearchBoxSuggestions" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "EnableShellExecuteFileStreamCheck" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1511,7 +1545,6 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\O
 :: Speed Up
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /V "VisualFXSetting" /T REG_DWORD /D "3" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Control Panel\Desktop" /V "ActiveWndTrackTimeout" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_CURRENT_USER\Control Panel\Desktop" /V "ActiveWndTrkTimeout" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Control Panel\Desktop" /V "AutoColorization" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Control Panel\Desktop" /V "AutoEndTasks" /T REG_SZ /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Control Panel\Desktop" /V "DockMoving" /T REG_SZ /D "1" /F >NUL 2>&1
@@ -1529,7 +1562,6 @@ REG ADD "HKEY_CURRENT_USER\Control Panel\Desktop" /V "UserPreferencesMask" /T RE
 REG ADD "HKEY_CURRENT_USER\Control Panel\Desktop" /V "WaitToKillAppTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Control Panel\Desktop" /V "WaitToKillServiceTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
 REG ADD "HKEY_USERS\.Default\Control Panel\Desktop" /V "ActiveWndTrackTimeout" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_USERS\.Default\Control Panel\Desktop" /V "ActiveWndTrkTimeout" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_USERS\.Default\Control Panel\Desktop" /V "AutoColorization" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_USERS\.Default\Control Panel\Desktop" /V "AutoEndTasks" /T REG_SZ /D "1" /F >NUL 2>&1
 REG ADD "HKEY_USERS\.Default\Control Panel\Desktop" /V "DockMoving" /T REG_SZ /D "1" /F >NUL 2>&1
@@ -1549,17 +1581,17 @@ REG ADD "HKEY_USERS\.Default\Control Panel\Desktop" /V "WaitToKillServiceTimeout
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize" /V "StartupDelayInMSec" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "AllowBlockingAppsAtShutdown" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control" /V "WaitToKillServiceTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\ControlSet001" /V "WaitToKillServiceTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\ControlSet002" /V "WaitToKillServiceTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control" /V "WaitToKillServiceTimeout" /T REG_SZ /D "1000" /F >NUL 2>&1
 :: Keyboard Delay
-REG ADD "HKEY_CURRENT_USER\Control Panel\Keyboard" /V "KeyboardDelay" /T REG_SZ /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\Control Panel\Keyboard" /V "KeyboardDelay" /T REG_SZ /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Control Panel\Keyboard" /V "KeyboardSpeed" /T REG_SZ /D "31" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\Control Panel\Keyboard" /V "InitialKeyboardIndicators" /T REG_SZ /D "2147483650" /F >NUL 2>&1
-REG ADD "HKEY_USERS\.Default\Control Panel\Keyboard" /V "KeyboardDelay" /T REG_SZ /D "0" /F >NUL 2>&1
+REG ADD "HKEY_USERS\.Default\Control Panel\Keyboard" /V "KeyboardDelay" /T REG_SZ /D "1" /F >NUL 2>&1
 REG ADD "HKEY_USERS\.Default\Control Panel\Keyboard" /V "KeyboardSpeed" /T REG_SZ /D "31" /F >NUL 2>&1
 REG ADD "HKEY_USERS\.Default\Control Panel\Keyboard" /V "InitialKeyboardIndicators" /T REG_SZ /D "2147483650" /F >NUL 2>&1
 :: No Beep
-REG ADD "HKEY_CURRENT_USER\Control Panel\Sound" /V "Beep" /T REG_SZ /D "no" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\Control Panel\Sound" /V "Beep" /T REG_SZ /D "No" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\Control Panel\Sound" /V "ExtendedSounds" /T REG_SZ /D "No" /F >NUL 2>&1
 :: Window Animations
 REG ADD "HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics" /V "MinAnimate" /T REG_SZ /D "0" /F >NUL 2>&1
 REG ADD "HKEY_USERS\.Default\Control Panel\Desktop\WindowMetrics" /V "MinAnimate" /T REG_SZ /D "0" /F >NUL 2>&1
@@ -1634,7 +1666,7 @@ REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\SystemFileAssociations\.stl\Shel
 REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\SystemFileAssociations\.tIF\Shell\3D Edit" /F >NUL 2>&1
 REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\SystemFileAssociations\.tIFf\Shell\3D Edit" /F >NUL 2>&1
 :: ADD to 'New' Menu
-IF EXIST "%APPDATA%\Microsoft\Windows\SendTo\Mail recipient.*" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\SendTo\Mail recipient.*" >NUL 2>&1
+IF EXIST "%APPDATA%\Microsoft\Windows\SendTo\Mail recipient.*" DEL /F /S /Q "%APPDATA%\Microsoft\Windows\SendTo\Mail recipient.*" /F >NUL 2>&1
 REG ADD "HKEY_CLASSES_ROOT\.cmd\ShellNew" /V "NullFile" /T REG_SZ /D "" /F >NUL 2>&1
 REG ADD "HKEY_CLASSES_ROOT\Drive\ShellEx\-ContextMenuHandlers\{FBEB8A05-BEEE-4442-804E-409D6C4515E9}" /VE /T REG_SZ /D "" /F >NUL 2>&1
 REG ADD "HKEY_CLASSES_ROOT\batfile\ShellEx\-ContextMenuHandlers\Compatibility" /VE /T REG_SZ /D "{1D27F844-3A1F-4410-85AC-14651078412D}" /F >NUL 2>&1
@@ -1688,7 +1720,7 @@ REG DELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\ShellEx\ContextMenuHandle
 :: ISO Burn
 REG DELETE "HKEY_CLASSES_ROOT\Windows.IsoFile\Shell\Burn" /F >NUL 2>&1
 :: Login Without Password in "control userpasswords2" or netplwiz
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\PasswordLess\Device" /V "DevicePasswordLessBuildVersion" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\PasswordLess\Device" /V "DevicePasswordLessBuildVersion" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Meet Now
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "HideSCAMeetNow" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /V "HideSCAMeetNow" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1734,7 +1766,8 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\cmdfile\shell\runasuser" /V "Suppre
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\exefile\shell\runasuser" /V "SuppressionPolicy" /T REG_DWORD /D "4096" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\mscfile\shell\runasuser" /V "SuppressionPolicy" /T REG_DWORD /D "4096" /F >NUL 2>&1
 
-::ECHO :::::::: Time ^& Language
+
+ECHO :::::::: Time ^& Language
 :: Date ^& time
 ::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time" /V "Start" /T REG_DWORD /D "3" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\tzautoupdate" /V "Start" /T REG_DWORD /D "3" /F >NUL 2>&1
@@ -1754,19 +1787,12 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore" /V "AutoDownload" /T REG_DWORD /D "2" /F >NUL 2>&1
 :: Drivers Update
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata" /V "PreventDeviceMetadataFromNetwork" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" /V "PreventDeviceMetadataFromNetwork" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Current\Device\Update" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\Update" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\Update\ExcludeWUDriversInQualityUpdate" /V "Value" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Other MS Products Update
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services\7971F918-A847-4430-9279-4A52D1EFE18D" /V "RegisteredWithAU" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Maps updates
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\Maps" /V "AutoUpdateEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Maps" /V "AutoDownloadAndUpdateMapData" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Maps" /V "AllowUntriggeredNetworkTrafficOnSettingsPage" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Delivery Optimization
 REG ADD "HKEY_USERS\S-1-5-20\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings" /V "DownloadMode" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization" /V "SystemSettingsDownloadMode" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1790,43 +1816,44 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet"
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet" /V "SpyNetReporting" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet" /V "SpyNetReportingLocation" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Core Isolation / Device Guard
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard" /V "EnableVirtualizationBasedSecurity" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
-::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /V "RequirePlatformSecurityFeatures" /T REG_DWORD /D "3" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /V "LsaCfgFlags" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard" /V "EnableVirtualizationBasedSecurity" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard" /V "HypervisorEnforcedCodeIntegrity" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard" /V "RequirePlatformSecurityFeatures" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard" /V "Locked" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /V "Enabled" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /V "Locked" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Network Protection
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection" /V "EnableNetworkProtection" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection" /V "EnableNetworkProtection" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Application Guard
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "AllowAppHVSI_ProviderSet" /T REG_DWORD /D "3" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "BlockNonEnterpriseContent" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "AllowCameraMicrophoneRedirection" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "AllowPersistence" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "AllowVirtualGPU" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "AuditApplicationGuard" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "SaveFilesToHost" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "FileTrustCriteria" /T REG_DWORD /D "2" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "AllowAppHVSI_ProviderSet" /T REG_DWORD /D "3" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "BlockNonEnterpriseContent" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "AllowCameraMicrophoneRedirection" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "AllowPersistence" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "AllowVirtualGPU" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "AuditApplicationGuard" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "SaveFilesToHost" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "FileTrustCriteria" /T REG_DWORD /D "2" /F >NUL 2>&1
 :: SmartScreen
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "EnableSmartScreen" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost" /V "ContentEvaluation" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost" /V "EnableWebContentEvaluation" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /V "SmartScreenEnabled" /T REG_SZ /D "On" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "ShellSmartScreenLevel" /T REG_SZ /D "Block" /F >NUL 2>&1
 :: Boot-Start Driver Initialization Policy
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Policies\EarlyLaunch" /V "DriverLoadPolicy" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Windows Insider Program
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Current\Device\System" /V "AllowExperimentation" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\SYSTEM\AllowExperimentation" /V "Value" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\System\AllowExperimentation" /V "Value" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsSelfHost\UI\Visibility" /V "HideInsiderPage" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /V "AllowBuildPreview" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /V "EnableConfigFlighting" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /V "EnableExperimentation" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: License Telemetry
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /V "NoGenTicket" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /V "AllowWindowsEntitlementReactivation" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform" /V "NoGenTicket" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform" /V "AllowWindowsEntitlementReactivation" /T REG_DWORD /D "1" /F >NUL 2>&1
 
 
 ECHO :::::::: Windows Search, Cortana, Indexing/Prefetch
-TASKLIST | FIND /I "SearchUI.exe" >NUL 2>&1 && TASKKILL /F /IM SearchUI.exe >NUL 2>&1
+TASKLIST | FIND /I "SearchUI.exe" /F >NUL 2>&1 && TASKKILL /F /IM SearchUI.exe >NUL 2>&1
 IF EXIST "%SYSTEMROOT%\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy" RD /S /Q "%SYSTEMROOT%\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy" /F >NUL 2>&1
 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\Cortana.exe" /V "Debugger" /T REG_SZ /D "%SYSTEMROOT%\System32\taskkill.exe" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search\Gather\Windows\SystemIndex" /V "EnableFindMyFiles" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1843,7 +1870,7 @@ REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /V 
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /V "HistoryViewEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /V "SearchboxTaskbarMode" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /V "VoiceShortcut" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Windows Search" /V "CortanaConsent" /T REG_DWORD /D "0" /F >NUL 2>&1
+::REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Windows Search" /V "CortanaConsent" /T REG_DWORD /D "0" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V "AllowCloudSearch" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V "AllowCortana" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V "AllowCortanaAboveLock" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1870,7 +1897,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search" 
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V "PreventIndexingUncachedExchangeFolders" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V "PreventIndexOnBattery" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V "PreventRemoteQueries" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V "PreventUnwantedADDins" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V "PreventUnwantedAddIns" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V "PreventUsingAdvancedIndexingOptions" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings" /V "IsAADCloudSearchEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings" /V "IsDeviceSearchHistoryEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1885,158 +1912,158 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Mem
 
 
 ECHO :::::::: Scheduled Tasks
-SCHTASKS /CHANGE /DISABLE /TN "MicrosoftEdgeUpdateTaskMachineCore" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "MicrosoftEdgeUpdateTaskMachineUA" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Active Directory Rights Management Services Client\AD RMS Rights Policy Template Management (Automated)" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Active Directory Rights Management Services Client\AD RMS Rights Policy Template Management (Manual)" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\AppID\EDP Policy Manager" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\AppID\SmartScreenSpecIFic" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\AITAgent" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\Consolidator" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\KernelCeipTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\PcaPatchDbTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\ProgramDataUpdater" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\StartupAppTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\UsbCeip" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ApplicationData\CleanupTemporaryState" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ApplicationData\DsSvcCleanup" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ApplicationData\DsSvcCleanup" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ApplicationData\appuriverIFierdaily" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ApplicationData\appuriverIFierinstall" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\AppxDeploymentClient\Pre-staged app cleanup" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Autochk\Proxy" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\BrokerInfrastructure\BgTaskRegistrationMaintenanceTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Chkdsk\ProactiveScan" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Clip\License Validation" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\CloudExperienceHost\CreateObjectTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\BthSQM" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\TelTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\Uploader" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DUSM\dusmtask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Defrag\ScheduledDefrag" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Device" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Device User" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Diagnosis\Scheduled" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DirectX\DXGIAdapterCache" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DirectX\DirectXDatabaseUpdater" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DiskCleanup\SilentCleanup" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticResolver" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DiskFootprint\Diagnostics" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DiskFootprint\StorageSense" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ErrorDetails\EnableErrorDetailsUpdate" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ErrorDetails\ErrorDetailsUpdate" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Feedback\Siuf\DmClient" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Feedback\Siuf\DmClientOnScenarioDownload" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\FileHistory\File History (maintenance mode)" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Flighting\FeatureConfig\ReconcileFeatures" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Flighting\FeatureConfig\UsageDataFlushing" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Flighting\FeatureConfig\UsageDataReporting" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Flighting\OneSettings\RefreshCache " >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\HelloFace\FODCleanupTask " >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Input\LocalUserSyncDataAvailable" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Input\MouseSyncDataAvailable" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Input\PenSyncDataAvailable" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Input\TouchpadSyncDataAvailable" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\International\Synchronize Language Settings" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\LanguageComponentsInstaller\Installation" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\LanguageComponentsInstaller\ReconcileLanguageResources" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\LanguageComponentsInstaller\Uninstallation" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\License Manager\TempSignedLicenseExchange" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Location\Notifications" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Location\WindowsActionDialog" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\MUI\LPRemove" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Maintenance\WinSAT" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Management\Provisioning\Cellular" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Management\Provisioning\Logon" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Maps\MapsToastTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Maps\MapsUpdateTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\MemoryDiagnostic\ProcessMemoryDiagnosticEvents" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\MemoryDiagnostic\RunFullMemoryDiagnostic" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Mobile Broadband Accounts\MNO Metadata Parser" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\NetTrace\GatherNetworkInfo" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\NlaSvc\WiFiTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Offline Files\Synchronization" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PI\Secure-Boot-Update" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PI\Sqm-Tasks" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Power Efficiency Diagnostics\AnalyzeSystem" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PushToInstall\LoginCheck" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PushToInstall\Registration" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Ras\MobilityManager" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\RecoveryEnvironment\VerIFyWinRE" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\RemoteAssistance\RemoteAssistanceTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\RetailDemo\CleanupOfflineContent" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SettingSync\BackgroundUploadTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SettingSync\BackgroundUploadTaskDisabled" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SettingSync\BackupTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SettingSync\NetworkStateChangeTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SetupSQMTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Setup\SetupCleanupTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\FamilySafetyMonitor" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\FamilySafetyMonitorToastTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\FamilySafetyRefresh" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\FamilySafetyRefreshTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\FamilySafetyUpload" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\IndexerAutomaticMaintenance" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SpacePort\SpaceAgentTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SpacePort\SpaceManagerTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Speech\SpeechModelDownloadTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Storage Tiers Management\Storage Tiers Management Initialization" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Storage Tiers Management\Storage Tiers Optimization" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Subscription\EnableLicenseAcquisition" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Subscription\LicenseAcquisition" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Sysmain\ResPriStaticDbSync" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Sysmain\WsSwapAssessmentTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\TPM\Tpm-HASCertRetr" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\TPM\Tpm-Maintenance" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Task Manager\Interactive" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Battery Saver Deferred Install" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Maintenance Install" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Policy Install" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Reboot" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Reboot_AC" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Reboot_Battery" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Refresh Settings" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Report policies" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Resume On Boot" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Schedule Maintenance Work" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Schedule Scan" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Schedule Wake To Work" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Schedule Work" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\USO_UxBroker_Display" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\USO_UxBroker_ReadyToReboot" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WCM\WiFiTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WDI\ResolutionHost" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WOF\WIM-Hash-Management" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WOF\WIM-Hash-Validation" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WS\WSTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Windows Error Reporting\QueueReporting" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Windows Error Reporting\QueueReportingDisabled" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Windows Media Sharing\UpdateLibrary" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WindowsUpdate\Automatic App Update" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WindowsUpdate\Scheduled Start" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WindowsUpdate\sih" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WindowsUpdate\sihboot" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Wininet\CacheTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WlanSvc\CDSSync" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Work Folders\Work Folders Logon Synchronization" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Work Folders\Work Folders Maintenance Work" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Workplace Join\Automatic-Device-Join" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Workplace Join\Device-Sync" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Workplace Join\Device-Sync" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WwanSvc\NotificationTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WwanSvc\OobeDiscovery" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\Xbgm" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\XblGameSaveTask" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\XblGameSaveTaskLogon" >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "MicrosoftEdgeUpdateTaskMachineCore" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "MicrosoftEdgeUpdateTaskMachineUA" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Active Directory Rights Management Services Client\AD RMS Rights Policy Template Management (Automated)" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Active Directory Rights Management Services Client\AD RMS Rights Policy Template Management (Manual)" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\AppID\EDP Policy Manager" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\AppID\SmartScreenSpecIFic" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\AITAgent" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\Consolidator" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\KernelCeipTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\PcaPatchDbTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\ProgramDataUpdater" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\StartupAppTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Application Experience\UsbCeip" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ApplicationData\CleanupTemporaryState" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ApplicationData\DsSvcCleanup" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ApplicationData\DsSvcCleanup" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ApplicationData\appuriverIFierdaily" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ApplicationData\appuriverIFierinstall" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\AppxDeploymentClient\Pre-staged app cleanup" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Autochk\Proxy" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\BrokerInfrastructure\BgTaskRegistrationMaintenanceTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Chkdsk\ProactiveScan" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Clip\License Validation" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\CloudExperienceHost\CreateObjectTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\BthSQM" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\TelTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\Uploader" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DUSM\dusmtask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Defrag\ScheduledDefrag" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Device" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Device User" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Diagnosis\Scheduled" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DirectX\DXGIAdapterCache" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DirectX\DirectXDatabaseUpdater" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DiskCleanup\SilentCleanup" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticResolver" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DiskFootprint\Diagnostics" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\DiskFootprint\StorageSense" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ErrorDetails\EnableErrorDetailsUpdate" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\ErrorDetails\ErrorDetailsUpdate" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Feedback\Siuf\DmClient" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Feedback\Siuf\DmClientOnScenarioDownload" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\FileHistory\File History (maintenance mode)" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Flighting\FeatureConfig\ReconcileFeatures" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Flighting\FeatureConfig\UsageDataFlushing" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Flighting\FeatureConfig\UsageDataReporting" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Flighting\OneSettings\RefreshCache " /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\HelloFace\FODCleanupTask " /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Input\LocalUserSyncDataAvailable" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Input\MouseSyncDataAvailable" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Input\PenSyncDataAvailable" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Input\TouchpadSyncDataAvailable" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\International\Synchronize Language Settings" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\LanguageComponentsInstaller\Installation" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\LanguageComponentsInstaller\ReconcileLanguageResources" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\LanguageComponentsInstaller\Uninstallation" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\License Manager\TempSignedLicenseExchange" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Location\Notifications" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Location\WindowsActionDialog" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\MUI\LPRemove" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Maintenance\WinSAT" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Management\Provisioning\Cellular" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Management\Provisioning\Logon" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Maps\MapsToastTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Maps\MapsUpdateTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\MemoryDiagnostic\ProcessMemoryDiagnosticEvents" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\MemoryDiagnostic\RunFullMemoryDiagnostic" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Mobile Broadband Accounts\MNO Metadata Parser" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\NetTrace\GatherNetworkInfo" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\NlaSvc\WiFiTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Offline Files\Synchronization" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PI\Secure-Boot-Update" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PI\Sqm-Tasks" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PerfTrack\BackgroundConfigSurveyor" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Power Efficiency Diagnostics\AnalyzeSystem" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PushToInstall\LoginCheck" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\PushToInstall\Registration" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Ras\MobilityManager" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\RecoveryEnvironment\VerIFyWinRE" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\RemoteAssistance\RemoteAssistanceTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\RetailDemo\CleanupOfflineContent" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SettingSync\BackgroundUploadTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SettingSync\BackgroundUploadTaskDisabled" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SettingSync\BackupTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SettingSync\NetworkStateChangeTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SetupSQMTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Setup\SetupCleanupTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\FamilySafetyMonitor" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\FamilySafetyMonitorToastTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\FamilySafetyRefresh" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\FamilySafetyRefreshTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\FamilySafetyUpload" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Shell\IndexerAutomaticMaintenance" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SpacePort\SpaceAgentTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\SpacePort\SpaceManagerTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Speech\SpeechModelDownloadTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Storage Tiers Management\Storage Tiers Management Initialization" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Storage Tiers Management\Storage Tiers Optimization" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Subscription\EnableLicenseAcquisition" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Subscription\LicenseAcquisition" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Sysmain\ResPriStaticDbSync" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Sysmain\WsSwapAssessmentTask" /F >NUL 2>&1
+::SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\TPM\Tpm-HASCertRetr" /F >NUL 2>&1
+::SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\TPM\Tpm-Maintenance" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Task Manager\Interactive" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Battery Saver Deferred Install" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Maintenance Install" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Policy Install" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Reboot" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Reboot_AC" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Reboot_Battery" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Refresh Settings" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Report policies" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Resume On Boot" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Schedule Maintenance Work" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Schedule Scan Static Task" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Schedule Scan" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Schedule Wake To Work" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\Schedule Work" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\USO_UxBroker" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\USO_UxBroker_Display" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\USO_UxBroker_ReadyToReboot" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\UpdateOrchestrator\UpdateModelTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WCM\WiFiTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WDI\ResolutionHost" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WOF\WIM-Hash-Management" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WOF\WIM-Hash-Validation" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WS\WSTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Windows Error Reporting\QueueReporting" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Windows Error Reporting\QueueReportingDisabled" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Windows Media Sharing\UpdateLibrary" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WindowsUpdate\Automatic App Update" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WindowsUpdate\Scheduled Start" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WindowsUpdate\sih" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WindowsUpdate\sihboot" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Wininet\CacheTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WlanSvc\CDSSync" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Work Folders\Work Folders Logon Synchronization" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Work Folders\Work Folders Maintenance Work" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Workplace Join\Automatic-Device-Join" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Workplace Join\Device-Sync" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Workplace Join\Device-Sync" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WwanSvc\NotificationTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WwanSvc\OobeDiscovery" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\Xbgm" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\XblGameSaveTask" /F >NUL 2>&1
+SCHTASKS /CHANGE /DISABLE /TN "Microsoft\XblGameSave\XblGameSaveTaskLogon" /F >NUL 2>&1
 NETSH AdvFirewall Firewall ADD Rule Name="Compatibility Telemetry Runner" Action="Block" Dir="In" Interface="Any" Program="%SYSTEMDRIVE%\Windows\System32\CompatTelRunner.exe" Description="Disallow CompatTelRunner to connect in from the Internet." Enable=Yes >NUL 2>&1
 NETSH AdvFirewall Firewall ADD Rule Name="Compatibility Telemetry Runner" Action="Block" Dir="Out" Interface="Any" Program="%SYSTEMDRIVE%\Windows\System32\CompatTelRunner.exe" Description="Disallow CompatTelRunner to connect out to the Internet." Enable=Yes >NUL 2>&1
 
@@ -2063,6 +2090,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Customer Experienc
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Customer Experience Improvement Program\KernelCeipTask" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Customer Experience Improvement Program\UsbCeip" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\diagnosticshub.standardcollector.service" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DiagSvc" /V "Start" /T REG_DWORD /D "3" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DiagTrack" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DmWapPushService" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DoSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
@@ -2070,10 +2098,8 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DuSmSvc" /V "Start
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EdgeUpdate" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EdgeUpdateM" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EntAppSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\FDResPub" /V "Start" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\FDResPub" /V "Start" /T REG_DWORD /D "3" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\HelloFace\FODCleanupTask" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\HomeGroupListener" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\HomeGroupProvider" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\icssvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\idsvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
@@ -2083,9 +2109,9 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MapsBroker" /V "St
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Maps\MapsToastTask" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Maps\MapsUpdateTask" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MessagingService" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MessagingService_60731" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MixedRealityOpenXRSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mrxsmb10" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mrxsmb" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\mrxsmb\Parameters" /V "RefuseReset" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MSiSCSI" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MsLldp" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
@@ -2102,27 +2128,24 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PcaSvc" /V "Start"
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\perceptionsimulation" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PhoneSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PimIndexMaintenanceSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PimIndexMaintenanceSvc_60731" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PrintWorkflowUserSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RemoteAccess" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RemoteRegistry" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\RetailDemo" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\seclogon" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SecLogon" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SEMgrSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SessionEnv" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\sgrmbroker" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SgrmBroker" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedRealitySvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\shpamsvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SHPamSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SNMPTRAP" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\spectrum" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spectrum" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SysMain" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TermService" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UmRdpService" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UnistoreSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UnistoreSvc_60731" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UserDataSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UserDataSvc_60731" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\vmicguestinterface" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\vmicheartbeat" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\vmickvpexchange" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
@@ -2135,7 +2158,6 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WbioSrvc" /V "Star
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wcncsvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wercplsupport" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WerSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WinHttpAutoProxySvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WinRM" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wisvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WMPNetworkSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
@@ -2163,201 +2185,201 @@ GOTO :EOF
 :Bloatware
 ECHO. & ECHO NOTICE: It can take some time while all Features are been removed. & ECHO.
 ECHO :::::::: Windows Capabilities
-::PowerShell -Command "Get-WindowsCapability -Online -Name "Language.Basicen-US*" | Remove-WindowsCapability -Online" >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Language.Basicen-US*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
 ::PowerShell -Command "Get-WindowsCapability -Online -Name "Media.WindowsMediaPlayer~0.0.12.0 >NUL 2>&1
-::PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*" | Remove-WindowsCapability -Online" >NUL 2>&1
-::PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.Notepad*" | Remove-WindowsCapability -Online" >NUL 2>&1
-::PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.PowerShell.ISE*" | Remove-WindowsCapability -Online" >NUL 2>&1
-::PowerShell -Command "Get-WindowsCapability -Online -Name "Rsat.ServerManager.Tools*" | Remove-WindowsCapability -Online" >NUL 2>&1
-::PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT.ActiveDirectory.DS-LDS.Tools*" | Remove-WindowsCapability -Online" >NUL 2>&1
-::PowerShell -Command "Get-WindowsCapability -Online -Name "Windows.Client.ShellComponents*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "Analog.Holographic.Desktop*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "App.StepsRecorder*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "App.Support.QuickAssist*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "Browser.InternetExplorer*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "Hello.Face*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "Language.Handwritingen-US*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "Language.OCRen-US*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "Language.Speechen-US*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "Language.TextToSpeechen-US*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "MathRecognizer*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.PowerShell.ISE*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.WordPad*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "OneCoreUAP.OneSync*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "OpenSSH.Client*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "OpenSSH.Server*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "Print.Fax.Scan*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT.ActiveDirectory.DS-LDS.Tools*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT.ServerManager.Tools*" | Remove-WindowsCapability -Online" >NUL 2>&1
-PowerShell -Command "Get-WindowsCapability -Online -Name "XPS.Viewer*" | Remove-WindowsCapability -Online" >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.MSPaint*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.Notepad*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.PowerShell.ISE*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Rsat.ServerManager.Tools*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT.ActiveDirectory.DS-LDS.Tools*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+::PowerShell -Command "Get-WindowsCapability -Online -Name "Windows.Client.ShellComponents*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Analog.Holographic.Desktop*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "App.StepsRecorder*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "App.Support.QuickAssist*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Browser.InternetExplorer*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Hello.Face*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Language.Handwritingen-US*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Language.OCRen-US*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Language.Speechen-US*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Language.TextToSpeechen-US*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "MathRecognizer*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.PowerShell.ISE*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Microsoft.Windows.WordPad*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "OneCoreUAP.OneSync*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "OpenSSH.Client*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "OpenSSH.Server*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "Print.Fax.Scan*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT.ActiveDirectory.DS-LDS.Tools*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "RSAT.ServerManager.Tools*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsCapability -Online -Name "XPS.Viewer*" | Remove-WindowsCapability -Online" /F >NUL 2>&1
 
 ECHO :::::::: Windows Features
 ::PowerShell -Command "Get-WindowsOptionalFeature -Online | select featurename"
 :: Disable-WindowsOptionalFeature -Remove -Online = Removes Payload from Disk
-::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SearchEngine-Client-Package" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MediaPlayback*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "*Hyper-V*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Internet-Explorer*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Client-ProjFS" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "DirectPlay*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "FaxServicesClientPackage" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "HypervisorPlatform" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "IIS*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "LegacyComponents*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MSMQ*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MSRDC*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx3*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx4-AdvSrvs" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx4Extended-ASPNET45" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Printing-Foundation*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Printing-XPSServices*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "ScanManagementConsole" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SimpleTCP" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TelnetClient" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TFTP" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TIFFIFilter" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WAS*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WCF*" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Windows-Identity-Foundation" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WorkFolders-Client" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
-PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "XPS-Foundation-XPS-Viewer" | Disable-WindowsOptionalFeature -Online -NoRestart" >NUL 2>&1
+::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SearchEngine-Client-Package" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+::PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MediaPlayback*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "*Hyper-V*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Internet-Explorer*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Client-ProjFS" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "DirectPlay*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "FaxServicesClientPackage" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "HypervisorPlatform" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "IIS*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "LegacyComponents*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MSMQ*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "MSRDC*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx3*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx4-AdvSrvs" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "NetFx4Extended-ASPNET45" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Printing-Foundation*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Printing-XPSServices*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "ScanManagementConsole" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SimpleTCP" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TelnetClient" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TFTP" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "TIFFIFilter" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WAS*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WCF*" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "Windows-Identity-Foundation" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "WorkFolders-Client" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
+PowerShell -Command "Get-WindowsOptionalFeature -Online -FeatureName "XPS-Foundation-XPS-Viewer" | Disable-WindowsOptionalFeature -Online -NoRestart" /F >NUL 2>&1
 
 ECHO :::::::: Windows UWP Applications
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.3DBuilder* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.549981C3F5F10* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Advertising.Xaml* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Appconnector* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingFinance* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingFoodAndDrink* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingHealthAndFitness* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingMaps* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingNews* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingSports* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingTranslator* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingTravel* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingWeather* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.CommsPhone* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.ConnectivityStore* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.FreshPaint* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.GetHelp* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.GetStarted* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Groove* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.HelpAndTips* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Media.PlayReadyClient* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Messaging* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Microsoft3DViewer* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftEdge* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftEdgeDevToolsClient* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftOfficeHub* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftPowerBIForWindows* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftSolitaireCollection* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MixedReality.Portal* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MSPaint* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Office.OneNote* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Office.Sway* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.OfficeLens* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.OneConnect* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.People* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Print3D* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Reader* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.RemoteDesktop* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.ScreenSketch* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.SkypeApp* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Todos* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Wallet* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Whiteboard* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.windowscommunicationsapps* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsFeedbackHub* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsMaps* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsPhone* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsReadingList* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsScan* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsSoundRecorder* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WinJS.1.0* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WinJS.2.0* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Xbox.TCUI* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.XboxApp* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.XboxGamingOverlay* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.XboxIdentityProvider* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.XboxSpeechToTextOverlay* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.YourPhone* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.ZuneMusic* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.ZuneVideo* | Remove-AppxPackage -AllUsers" >NUL 2>&1
-PowerShell -Command "Get-AppXPackage -AllUsers *XboxOneSmartGlass* | Remove-AppxPackage -AllUsers" >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.3DBuilder* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.549981C3F5F10* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Advertising.Xaml* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Appconnector* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingFinance* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingFoodAndDrink* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingHealthAndFitness* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingMaps* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingNews* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingSports* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingTranslator* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingTravel* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.BingWeather* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.CommsPhone* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.ConnectivityStore* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.FreshPaint* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.GetHelp* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.GetStarted* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Groove* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.HelpAndTips* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Media.PlayReadyClient* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Messaging* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Microsoft3DViewer* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftEdge* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftEdgeDevToolsClient* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftOfficeHub* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftPowerBIForWindows* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftSolitaireCollection* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MixedReality.Portal* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.MSPaint* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Office.OneNote* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Office.Sway* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.OfficeLens* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.OneConnect* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.People* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Print3D* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Reader* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.RemoteDesktop* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.ScreenSketch* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.SkypeApp* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Todos* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Wallet* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Whiteboard* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.windowscommunicationsapps* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsFeedbackHub* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsMaps* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsPhone* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsReadingList* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsScan* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WindowsSoundRecorder* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WinJS.1.0* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.WinJS.2.0* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.Xbox.TCUI* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.XboxApp* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.XboxGamingOverlay* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.XboxIdentityProvider* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.XboxSpeechToTextOverlay* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.YourPhone* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.ZuneMusic* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *Microsoft.ZuneVideo* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
+PowerShell -Command "Get-AppXPackage -AllUsers *XboxOneSmartGlass* | Remove-AppxPackage -AllUsers" /F >NUL 2>&1
 ECHO :::::::: Windows UWP Provisioned Applications
-::PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WebMediaExtensions*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-::PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Windows.Photos*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-::PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsAlarms*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-::PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsCamera*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.3DBuilder*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.549981C3F5F10*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Advertising.Xaml*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Appconnector*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingFinance*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingFoodAndDrink*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingHealthAndFitness*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingMaps*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingNews*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingSports*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingTranslator*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingTravel*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingWeather*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.CommsPhone*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.ConnectivityStore*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.FreshPaint*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.GetHelp*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.GetStarted*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Groove*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.HelpAndTips*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Media.PlayReadyClient*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Messaging*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Microsoft3DViewer*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftEdge*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftEdgeDevToolsClient*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftOfficeHub*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftPowerBIForWindows*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftSolitaireCollection*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftStickyNotes*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MixedReality.Portal*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MSPaint*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Office.OneNote*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Office.Sway*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.OfficeLens*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.OneConnect*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.People*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Print3D*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Reader*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.RemoteDesktop*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.ScreenSketch*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.SkypeApp*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Todos*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Wallet*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Whiteboard*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.windowscommunicationsapps*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsFeedbackHub*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsMaps*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsPhone*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsReadingList*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsScan*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsSoundRecorder*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WinJS.1.0*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WinJS.2.0*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Xbox.TCUI*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.XboxApp*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.XboxGamingOverlay*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.XboxIdentityProvider*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.XboxSpeechToTextOverlay*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.YourPhone*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.ZuneMusic*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.ZuneVideo*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
-PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*XboxOneSmartGlass*'} | Remove-AppXProvisionedPackage -Online" >NUL 2>&1
+::PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WebMediaExtensions*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+::PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Windows.Photos*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+::PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsAlarms*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+::PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsCamera*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.3DBuilder*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.549981C3F5F10*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Advertising.Xaml*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Appconnector*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingFinance*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingFoodAndDrink*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingHealthAndFitness*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingMaps*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingNews*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingSports*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingTranslator*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingTravel*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.BingWeather*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.CommsPhone*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.ConnectivityStore*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.FreshPaint*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.GetHelp*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.GetStarted*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Groove*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.HelpAndTips*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Media.PlayReadyClient*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Messaging*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Microsoft3DViewer*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftEdge*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftEdgeDevToolsClient*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftOfficeHub*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftPowerBIForWindows*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftSolitaireCollection*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MicrosoftStickyNotes*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MixedReality.Portal*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.MSPaint*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Office.OneNote*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Office.Sway*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.OfficeLens*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.OneConnect*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.People*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Print3D*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Reader*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.RemoteDesktop*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.ScreenSketch*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.SkypeApp*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Todos*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Wallet*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Whiteboard*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.windowscommunicationsapps*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsFeedbackHub*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsMaps*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsPhone*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsReadingList*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsScan*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WindowsSoundRecorder*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WinJS.1.0*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.WinJS.2.0*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.Xbox.TCUI*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.XboxApp*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.XboxGamingOverlay*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.XboxIdentityProvider*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.XboxSpeechToTextOverlay*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.YourPhone*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.ZuneMusic*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*Microsoft.ZuneVideo*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
+PowerShell -Command "Get-AppXProvisionedPackage -Online | Where-Object {$_.PackageName -Like '*XboxOneSmartGlass*'} | Remove-AppXProvisionedPackage -Online" /F >NUL 2>&1
 GOTO :Reboot
 
 :EOF
