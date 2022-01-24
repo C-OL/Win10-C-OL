@@ -109,8 +109,9 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppComp
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Blocked" /V "{1d27f844-3a1f-4410-85ac-14651078412d}" /T REG_SZ /D "" /F >NUL 2>&1
 :: Classic Paint
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Applets\Paint\Settings" /V "DisableModernPaintBootstrap" /T REG_DWORD /D "1" /F >NUL 2>&1
-
 :: IE Harden
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge" /V "PreventSmartScreenPromptOverride" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge" /V "PreventSmartScreenPromptOverrideForFiles" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds" /V "AllowBasicAuthInClear" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds" /V "DisableEnclosureDownload" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter" /V "PreventOverride" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -242,6 +243,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Appx" /V "Restri
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Appx" /V "RestrictAppToSystemVolume" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\AppModel\StateManager" /V "AllowSharedLocalAppData" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\AppModel\StateManager" /V "AllowSharedUserAppData" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /V "AllowAllTrustedApps" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock" /V "AllowDevelopmentWithoutDevLicense" /T REG_DWORD /D "1" /F >NUL 2>&1
 
 
@@ -333,6 +335,8 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V "No
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System" /V "DisableHHDEP" /T REG_DWORD /D "0" /F >NUL 2>&1
 BCDEDIT /Set {Current} NX OptOut >NUL 2>&1
 :: NTFS File System
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Policies" /V "LongPathsEnabled" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{48981759-12F2-42A6-A048-028B3973495F}Machine\System\CurrentControlSet\Policies" /V "LongPathsEnabled" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "ContigFileAllocSize" /T REG_DWORD /D "200" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "DisableDeleteNotification" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /V "LongPathsEnabled" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -653,6 +657,7 @@ REG Delete "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVer
 :: WiFi Sense and Hot Spot
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\WiFi\AllowAutoConnectToWiFiSenseHotspots" /V "value" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\WiFi\AllowWiFiHotSpotReporting" /V "value" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\Tethering" /V "RemoteStartupDisabled" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager" /V "WiFiSenseCredShared" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager" /V "WiFiSenseOpen" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WcmSvc\WiFiNetworkManager\Config" /V "AutoConnectAllowedOEM" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -710,10 +715,19 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\S
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Client" /V "DisabledByDefault" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Server" /V "Enabled" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Server" /V "DisabledByDefault" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128" /V "Enabled" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128" /V "Enabled" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128" /V "Enabled" /T REG_DWORD /D "1" /F >NUL 2>&1
-
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 40/128" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 56/128" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 64/128" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 128/128" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 40/128" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 56/128" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC2 64/128" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\DES 56/56" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168/168" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\SHA" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\PKCS" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: EccCurves
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002" /V "EccCurves" /T REG_MULTI_SZ /D "NistP384 NistP256" /F >NUL 2>&1
 
@@ -823,6 +837,7 @@ ECHO :::::::: Privacy
 :: Advertising ID
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo" /V "DisabledByGroupPolicy" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Current\Device\Bluetooth" /V "AllowAdvertising" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Current\Device\Browser" /V "AllowAddressBarDropdown" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -900,6 +915,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\SQMClient\Windows" /V "C
 :: Windows Performance PerfTrack Log
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WDI\{9C5A40DA-B965-4FC3-8781-88DD50A6299D}" /V "ScenarioExecutionEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Tailored Experiences
+REG ADD "HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Privacy" /V "TailoredExperiencesWithDiagnosticDataEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy" /V "TailoredExperiencesWithDiagnosticDataEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy" /V "TailoredExperiencesWithDiagnosticDataEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Activity History (Activity Feed / Timeline)
@@ -1187,6 +1203,7 @@ REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeli
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SubscribedContent-280817Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SubscribedContent-310091Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SubscribedContent-310092Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+:: Let’s finish setting up your device
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SubscribedContent-310093Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SubscribedContent-310094Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SubscribedContent-314558Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1589,7 +1606,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Re
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" /V "Disabled" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" /V "DontSendADDitionalData" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" /V "LoggingDisabled" /T REG_DWORD /D "1" /F >NUL 2>&1
-:: WSH
+:: Windows Script Host
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Script Host\Settings" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Windows Administrative Tools
 :: Device Manager
@@ -1760,12 +1777,14 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore" /V "AutoDownload" /T REG_DWORD /D "2" /F >NUL 2>&1
 :: Drivers Update
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata" /V "PreventDeviceMetadataFromNetwork" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" /V "PreventDeviceMetadataFromNetwork" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\Update\ExcludeWUDriversInQualityUpdate" /V "Value" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /V "ExcludeWUDriversInQualityUpdate" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Other MS Products Update
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Services\7971F918-A847-4430-9279-4A52D1EFE18D" /V "RegisteredWithAU" /T REG_DWORD /D "1" /F >NUL 2>&1
-:: Maps updates
+:: Maps
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\Maps" /V "AutoUpdateEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+reg ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Maps" /V "AutoDownloadAndUpdateMapData" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: Delivery Optimization
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" /V "DODownloadMode" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config" /V "DODownloadMode" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1778,11 +1797,11 @@ REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOpt
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet" /V "SubmitSamplesConsent" /T REG_DWORD /D "2" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows Security Health\State" /V "AccountProtection_MicrosoftAccount_Disconnected" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows Security Health\State" /V "AppAndBrowser_StoreAppsSmartScreenOff" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Notifications" /V "DisableEnhancedNotifications" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Notifications" /V "DisableNotifications" /T REG_DWORD /D "1" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender Security Center\Virus and Threat Protection" /V "SummaryNotificationDisabled" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MRT" /V "DontOfferThroughWUAU" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MRT" /V "DontReportInfectionInformation" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications" /V "DisableEnhancedNotifications" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications" /V "DisableNotifications" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Virus and Threat Protection" /V "SummaryNotificationDisabled" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine" /V "MpEnablePus" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting" /V "DisableGenericReports" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Scan" /V "CheckForSignaturesBeforeRunningScan" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1790,6 +1809,8 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet"
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet" /V "LocalSettingOverrideSpyNetReporting" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet" /V "SpyNetReporting" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SpyNet" /V "SpyNetReportingLocation" /T REG_DWORD /D "0" /F >NUL 2>&1
+:: Network Protection
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection" /V "EnableNetworkProtection" /T REG_DWORD /D "1" /F >NUL 2>&1
 :: Core Isolation / Device Guard
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard" /V "EnableVirtualizationBasedSecurity" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard" /V "HypervisorEnforcedCodeIntegrity" /T REG_DWORD /D "1" /F >NUL 2>&1
@@ -1800,8 +1821,7 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenari
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /V "LsaCfgFlags" /T REG_DWORD /D "1" /F >NUL 2>&1
 
 BCDEDIT /SET HYPERVISORSCHEDULERTYPE CORE >NUL 2>&1
-:: Network Protection
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\Windows Defender Exploit Guard\Network Protection" /V "EnableNetworkProtection" /T REG_DWORD /D "1" /F >NUL 2>&1
+
 :: Application Guard
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "AllowAppHVSI_ProviderSet" /T REG_DWORD /D "3" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\AppHVSI" /V "BlockNonEnterpriseContent" /T REG_DWORD /D "0" /F >NUL 2>&1
@@ -1822,11 +1842,17 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Policies\EarlyLaunch" /V "D
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Current\Device\System" /V "AllowExperimentation" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\Default\System\AllowExperimentation" /V "Value" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsSelfHost\UI\Visibility" /V "HideInsiderPage" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsSelfHost\UI\Visibility" /V "HideInsiderPage" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX" /V "InsiderProgramEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /V "AllowBuildPreview" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /V "EnableConfigFlighting" /T REG_DWORD /D "0" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /V "EnableExperimentation" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /V "InsiderProgramEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /V "ManagePreviewBuilds" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /V "ManagePreviewBuildsPolicyValue" /T REG_DWORD /D "0" /F >NUL 2>&1
 :: License Telemetry
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform" /V "NoGenTicket" /T REG_DWORD /D "1" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform" /V "NoGenTicket" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /V "NoGenTicket" /T REG_DWORD /D "1" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform" /V "AllowWindowsEntitlementReactivation" /T REG_DWORD /D "1" /F >NUL 2>&1
 
 
