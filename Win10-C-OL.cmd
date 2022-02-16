@@ -2085,7 +2085,6 @@ SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Subscription\EnableLicenseAcqui
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Subscription\LicenseAcquisition" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Sysmain\ResPriStaticDbSync" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Task Manager\Interactive" >NUL 2>&1
-SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\TextServicesFramework\MsCtfMonitor" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\WS\WSTask" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Windows Error Reporting\QueueReporting" >NUL 2>&1
 SCHTASKS /CHANGE /DISABLE /TN "Microsoft\Windows\Windows Error Reporting\QueueReportingDisabled" >NUL 2>&1
@@ -2130,6 +2129,7 @@ ECHO :::::::: Services
 ::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SensorDataService" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SgrmBroker" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SysMain" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
+::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TabletInputService" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UnistoreSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UserDataSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 ::REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WaaSMedicSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
@@ -2187,7 +2187,6 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SessionEnv" /V "St
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedRealitySvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spectrum" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
-REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TabletInputService" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\TermService" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UmRdpService" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
 REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WMPNetworkSvc" /V "Start" /T REG_DWORD /D "4" /F >NUL 2>&1
@@ -2210,9 +2209,70 @@ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\xbgm" /V "Start" /
 
 
 :::: Microsoft Office
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\office\16.0\common\qmenable" /T REG_DWORD /D "0" /F >NUL 2>&1
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\office\common\clienttelemetry\sendtelemetry" /T REG_DWORD /D "3" /F >NUL 2>&1
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\office\16.0\common\sendcustomerdata" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Common\ExperimentEcs\all\Overrides" /V "Microsoft.Office.Telemetry.DisableTelemetry" /T REG_SZ /D "true" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Outlook\Options\Mail" /V "EnableLogging" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Word\Options" /V "EnableLogging" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\Common\ClientTelemetry" /V "DisableTelemetry" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common" /V "DisableBootToOfficeStart" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common" /V "InsidersLabBehavior" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common" /V "QMEnable" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common" /V "SendCustomerData" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common" /V "UpdateReliabilityData" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\General" /V "DisableBootToOfficeStart" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\General" /V "OptInDisable" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\General" /V "ShownFileFmtPrompt" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\General" /V "ShownFirstRunOptIn" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\General" /V "SkyDriveSigninOption" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\Licensing" /V "SharedComputerLicensing" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\Privacy" /V "ControllerConnectedServicesEnabled" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\Privacy" /V "DisconnectedState" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\Privacy" /V "DownloadContentDisabled" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\Privacy" /V "UsercontentDisabled" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\PtWatson" /V "DisableBootToOfficeStart" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\PtWatson" /V "PtWOptin" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Common\Security\FileValidation" /V "DisableReporting" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\FirstRun" /V "BootedRTM" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\FirstRun" /V "DisableMovie" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\Lync" /V "DisableAutomaticSendTracing" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM" /V "EnableFileObfuscation" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM" /V "EnableLogging" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM" /V "EnableUpload" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedApplications" /V "AccessSolution" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedApplications" /V "OlkSolution" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedApplications" /V "OneNoteSolution" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedApplications" /V "PPTSolution" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedApplications" /V "ProjectSolution" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedApplications" /V "PublisherSolution" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedApplications" /V "VisioSolution" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedApplications" /V "WDSolution" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedApplications" /V "XLSolution" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedSolutiontypes" /V "Agave" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedSolutiontypes" /V "AppAddins" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedSolutiontypes" /V "ComAddins" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedSolutiontypes" /V "DocumentFiles" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\16.0\OSM\PreventedSolutiontypes" /V "TemplateFiles" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\Blog" /V "DisableBlog" /T REG_DWORD /D "2" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\ClientTelemetry" /V "DisableTelemetry" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\ClientTelemetry" /V "DisableTelemetry" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\ClientTelemetry" /V "SendTelemetry" /T REG_DWORD /D "3" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\Feedback" /V "Enabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\Feedback" /V "FeedbackIncludeLog" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\Feedback" /V "IncludeEmail" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\Feedback" /V "IncludeScreenshot" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\Feedback" /V "MSORidFeedbackIncludeLog" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\Feedback" /V "MSORidSurveyEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\Feedback" /V "SurveyEnabled" /T REG_DWORD /D "0" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\OffDiag" /V "DisableCheckForSolutions" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\OffDiag" /V "DisableCompatibilityDiagnostic" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\OffDiag" /V "DisableDiskDiagnostic" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\OffDiag" /V "DisableMemoryDiagnostic" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\OffDiag" /V "DisableOffDiagnostics" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\OffDiag" /V "DisableSetupDiagnostic" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\OffDiag" /V "DisableUpdateDiagnostic" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\OffDiag" /V "NoOfficeSessionsLogging" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\Common\Security" /V "DisableAllActiveX" /T REG_DWORD /D "1" /F >NUL 2>&1
+REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Office\ReadinessToolKit" /V "EnableUsageAgent" /T REG_DWORD /D "0" /F >NUL 2>&1
+
 
 
 ECHO. & ECHO Tweaks Have Been Completed Successfully.
